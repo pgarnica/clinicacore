@@ -1,3 +1,13 @@
 .vs/ 
 ClinicaHumaita/bin/
 ClinicaHumaita/obj/
+ClinicaHumaita/bin/Debug/netcoreapp3.1/appsettings.json
+ClinicaHumaita/bin/Debug/netcoreapp3.1/ClinicaHumaita.dll
+ClinicaHumaita/bin/Debug/netcoreapp3.1/ClinicaHumaita.pdb
+ClinicaHumaita/bin/Debug/netcoreapp3.1/ClinicaHumaita.runtimeconfig.dev.json
+ClinicaHumaita/bin/Debug/netcoreapp3.1/ClinicaHumaita.Views.dll
+ClinicaHumaita/bin/Debug/netcoreapp3.1/ClinicaHumaita.Views.pdb
+ClinicaHumaitaTests/obj/ClinicaHumaitaTests.csproj.nuget.dgspec.json
+ClinicaHumaitaTests/obj/Debug/netcoreapp3.1/ClinicaHumaitaTests.assets.cache
+ClinicaHumaitaTests/obj/Debug/netcoreapp3.1/ClinicaHumaitaTests.csprojAssemblyReference.cache
+.vs/ClinicaHumaita/config/applicationhost.config

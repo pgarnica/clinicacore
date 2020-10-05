@@ -75,16 +75,28 @@ namespace ClinicaHumaita.Services
             {
                 //criptografar a senha
                 user.Password = MD5Hash(user.Password);
-                //salvar no banco
-                _db.Entry(user).State = EntityState.Modified;
+
+                //atualizar o user
+                var entryUser = _db.User.FirstOrDefault(e => e.Id == user.Id);
+                _db.Entry(entryUser).CurrentValues.SetValues(user);
                 await _db.SaveChangesAsync();
+
+                //atualizar a person
+                var entryPerson = _db.Person.FirstOrDefault(x => x.id == user.PersonId);
+                entryPerson.name = user.Person.name;
+                entryPerson.email = user.Person.email;
+                _db.Entry(entryPerson).State = EntityState.Modified;
+                await _db.SaveChangesAsync();
+
+                //buscar o user atualizado com suas dependecias 
+                entryUser = _db.User.Include(x=>x.Person).FirstOrDefault(e => e.Id == user.Id);
                 //retorna o usuario
-                return user;
+                return entryUser;
             }
-            catch
+            catch(Exception ex)
             {
                 //retorna uma exception em caso de falha
-                throw new InvalidDataException();
+                throw ex;
             }
         }
 

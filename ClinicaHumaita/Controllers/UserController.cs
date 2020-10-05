@@ -8,6 +8,7 @@ using ClinicaHumaita.Interfaces;
 using ClinicaHumaita.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaHumaita.Controllers
@@ -73,6 +74,71 @@ namespace ClinicaHumaita.Controllers
             return View(nameof(Create),user);
         }
 
+        [Authorize]
+        //Editar Usuario
+        public IActionResult Edit()
+        {
+            //Busca o username do usuario logado
+            var username = User.Claims.Where(x => x.Type == "usersname").FirstOrDefault().Value;
+
+            //valida se o username nao esta vazio
+            if (username != null && username != "")
+            {
+                //busca o usuario logado pelo username
+                var user = _service.GetByUserName(username).Result;
+                //retorna para a view um model do usuario logado
+                return View(nameof(Edit),user);
+            }
+            //se o username estiver vazio, redireciona para pagina de login
+            return RedirectToAction(nameof(Login));
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //Editar Usuario
+        public async Task<IActionResult> Edit(Users user)
+        {
+            //valida se existe um usuario logado
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            var username = _service.GetByUserName(user.UserName).Result;
+            //Busca o username do usuario logado
+            var usernameLogged = User.Claims.Where(x => x.Type == "usersname").FirstOrDefault().Value;
+
+            if (username != null && username.UserName != usernameLogged)
+            {
+                ModelState.AddModelError("UserName", "Usuário já existe.");
+            }
+
+            //desloga o usuario
+            bool logoff = await LogoutUser();
+
+            //valida se o modelstate eh valido
+            if (ModelState.IsValid && logoff)
+            {
+                try
+                {
+                    // Chama a classe de servico e aguarda a execucao
+                    var newuser = await _service.Edit(user);
+                    await LoginUser(newuser);
+                    //redireciona para Index da PersonController
+                    return RedirectToAction(nameof(Index),"Person");
+                }
+                catch
+                {
+                    //retorna erro em caso de falha na insercao
+                    ModelState.AddModelError("UserName", "Problema ao realizar requisição! Atualize a página e tente novamente.");
+                }
+            }
+
+            //em caso de erro na validacao ou de inserção retorna para a view
+            return View(nameof(Edit), user);
+        }
+
         //alterada a route para nao exibir o /user/
         [Route("/Login")]
         public IActionResult Login()
@@ -108,14 +174,15 @@ namespace ClinicaHumaita.Controllers
                     }
                     else
                     {
-                        if(LoginUser(user))
+
+                        if (LoginUser(user).Result == true)
                         {
                             //redireciona para a pagina principal quando usuario logado
                             return RedirectToAction(nameof(Index), "Person");
                         }
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     //retorna erro em caso de falha no login
                     ModelState.AddModelError("UserName", "Problema ao realizar requisição! Atualize a página e tente novamente.");
@@ -127,73 +194,15 @@ namespace ClinicaHumaita.Controllers
 
         //realiza o logout do usuario
         [HttpGet]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult>  Logout()
         {
             //realiza o logout do usuario
-            await Logout();
+            await LogoutUser();
 
             //redireciona para o login
             return RedirectToAction("Index", "Login");
         }
-
-        [Authorize]
-        //Editar Usuario
-        public IActionResult Edit()
-        {
-            //Busca o username do usuario logado
-            var username = User.Claims.Where(x => x.Type == "usersname").FirstOrDefault().Value;
-
-            //valida se o username nao esta vazio
-            if (username != null && username != "")
-            {
-                //busca o usuario logado pelo username
-                var user = _service.GetByUserName(username).Result;
-                //retorna para a view um model do usuario logado
-                return View(nameof(Edit),user);
-            }
-            //se o username estiver vazio, redireciona para pagina de login
-            return RedirectToAction(nameof(Login));
-        }
-
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        //Editar Usuario
-        public async Task<IActionResult> Edit(Users user)
-        {
-            //valida se existe um usuario logado
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-
-            //valida se o username esta em uso
-            var userNameExists = await _service.GetByUserName(user.UserName);
-            if (userNameExists != null)
-            {
-                ModelState.AddModelError("UserName", "Usuário já existe.");
-            }
-
-            //valida se o modelstate eh valido
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    // Chama a classe de servico e aguarda a execucao
-                    await _service.Edit(user);
-                    //redireciona para Index da PersonController
-                    return RedirectToAction(nameof(Index),"Person");
-                }
-                catch
-                {
-                    //retorna erro em caso de falha na insercao
-                    ModelState.AddModelError("UserName", "Problema ao realizar requisição! Atualize a página e tente novamente.");
-                }
-            }
-            //em caso de erro na validacao ou de inserção retorna para a view
-            return View(nameof(Edit), user);
-        }
-
+        
         //seta o login do usuario no claim
         private async Task<bool> LoginUser(Users user)
         {
@@ -202,7 +211,7 @@ namespace ClinicaHumaita.Controllers
                 //se o usuario estiver logado, realiza o logout
                 if (User.Identity.IsAuthenticated)
                 {
-                    await Logout();
+                     await LogoutUser();
                 }
 
                 //se o usuario for valido, faz login do usuario 
@@ -210,7 +219,7 @@ namespace ClinicaHumaita.Controllers
 
                 ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
                 ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
-                HttpContext.SignInAsync(principal);
+                await HttpContext.SignInAsync(principal);
                 return true;
             }catch
             {
@@ -219,9 +228,10 @@ namespace ClinicaHumaita.Controllers
         }
 
         //seta o logout do usuario no claim
-        private async void LogoutUser(Users user)
+        private async Task<bool> LogoutUser()
         {
-                await HttpContext.SignOutAsync();       
+            await HttpContext.SignOutAsync();
+            return true;
         }
     }
 }
