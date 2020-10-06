@@ -106,6 +106,49 @@ namespace ClinicaHumaitaTests
         }
 
         [Theory]
+        [InlineData("Paulo Garnica", "paulo.garnica@gail.com")]
+        public async Task Remove_Person(string name, string email)
+        {
+            //arrange
+            //Cria uma database virtual para nao sujar a base com testes
+            var options = new DbContextOptionsBuilder<ClinicaContext>().UseInMemoryDatabase(databaseName: "TestNewListDb").Options;
+
+            // cria o context para acesso ao db, utilizado a base virtual
+            using (var context = new ClinicaContext(options))
+            {
+                // 1. Arrange
+                //cria uma nova pessoa
+                var rl = new Person
+                {
+                    name = name,
+                    email = email
+                };
+
+                // 2. Act 
+                //instancia o servico para ser utilizado com a base virtual
+                var rls = new PersonService(context);
+
+                //adiciona uma nova pessoa
+                await rls.Create(rl);
+
+                //recupera a pessoa inserida
+                var person = await rls.GetById(rl.id);
+
+                //envia as alteracoes
+                var result = await rls.Remove(person);
+
+                var buscaremovido = await rls.GetById(person.id);
+
+                // 3. Assert
+                //verifica se os dados alterados estao corretos
+                Assert.NotNull(result);
+                Assert.Null(buscaremovido);
+                Assert.Equal(true, result);
+            }
+        }
+
+
+        [Theory]
         [InlineData(1)]
         public async Task GetPersonById(int id)
         {

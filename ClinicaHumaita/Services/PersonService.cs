@@ -51,6 +51,24 @@ namespace ClinicaHumaita.Services
             //retornar o objeto que foi salvo
             return person;
         }
+
+        public async Task<bool> Remove(Person person)
+        {
+            try
+            {
+                //salvar no banco
+                var result = _db.Person.Remove(person);
+                await _db.SaveChangesAsync();
+            }
+            catch
+            {
+                // retorna uma exception em caso de falha na insercao
+                throw new InvalidDataException();
+            }
+            //retornar o objeto que foi salvo
+            return true;
+        }
+
         public async Task<Person> GetById(int id)
         {
             //retorna person pelo id

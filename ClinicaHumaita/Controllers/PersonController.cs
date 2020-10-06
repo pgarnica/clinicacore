@@ -100,5 +100,40 @@ namespace ClinicaHumaita.Controllers
             }
         }
 
+        [Authorize]
+        public async Task<IActionResult> Remove(int? id)
+        {
+
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var pessoa = await _service.GetById(int.Parse(id.ToString()));
+
+            return View(pessoa);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Remove(Person person)
+        {
+            try
+            {
+                  //adiciona person
+                    var result = await _service.Remove(person);
+                    //redireciona para lista de persons
+                    return RedirectToAction(nameof(Index));
+               
+            }
+            catch
+            {
+                //em caso de erro retorno uma excpetion.
+                throw new InvalidDataException();
+            }
+        }
+
+
     }
 }
