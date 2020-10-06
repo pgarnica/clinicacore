@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ClinicaHumaita.Interfaces;
@@ -34,18 +35,28 @@ namespace ClinicaHumaita.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Person person)
+        public async Task<ActionResult> Create(Person person)
         {
             try
             {
-                _service.Add(person);  
+                if(ModelState.IsValid)
+                {   //adiciona person
+                    var result = await _service.Create(person);
+                    //redireciona para lista de persons
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    //se a modelstate nao for valida retorna erro
+                    ModelState.AddModelError("email", "Dados inválidos");
+                    return View(person);
+                }
             }
             catch
             {
-                return View();
+                //em caso de erro retorno uma excpetion.
+                throw new InvalidDataException();
             }
-
-            return View();
         }
 
     }

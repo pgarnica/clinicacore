@@ -30,7 +30,7 @@ namespace ClinicaHumaita.Services
                 //criptografar a senha
                 user.Password = MD5Hash(user.Password);
                 //salvar no banco
-                var result = await _db.User.AddAsync(user);
+                var result = await _db.Users.AddAsync(user);
                 await _db.SaveChangesAsync();
             }
             catch  
@@ -44,13 +44,13 @@ namespace ClinicaHumaita.Services
         public async Task<Users> GetByUserName(string username)
         {
             //include para retornar os dados de person dentro do user
-            var user = await _db.User.Include(x=>x.Person).FirstOrDefaultAsync(x => x.UserName == username);
+            var user = await _db.Users.Include(x=>x.Person).FirstOrDefaultAsync(x => x.UserName == username);
             return user;
         }
         public async Task<Users> Login(string username, string password)
         {
             //include para retornar os dados de person dentro do user
-            var user = await _db.User.Include(x=>x.Person).FirstOrDefaultAsync(x => x.UserName == username && x.Active == true);
+            var user = await _db.Users.Include(x=>x.Person).FirstOrDefaultAsync(x => x.UserName == username && x.Active == true);
 
             if(user != null)
             {
@@ -76,7 +76,7 @@ namespace ClinicaHumaita.Services
                 user.Password = MD5Hash(user.Password);
 
                 //atualizar o user
-                var entryUser = _db.User.FirstOrDefault(e => e.Id == user.Id);
+                var entryUser = _db.Users.FirstOrDefault(e => e.Id == user.Id);
                 _db.Entry(entryUser).CurrentValues.SetValues(user);
                 await _db.SaveChangesAsync();
 
@@ -88,7 +88,7 @@ namespace ClinicaHumaita.Services
                 await _db.SaveChangesAsync();
 
                 //buscar o user atualizado com suas dependecias 
-                entryUser = _db.User.Include(x=>x.Person).FirstOrDefault(e => e.Id == user.Id);
+                entryUser = _db.Users.Include(x=>x.Person).FirstOrDefault(e => e.Id == user.Id);
                 //retorna o usuario
                 return entryUser;
             }
@@ -125,12 +125,12 @@ namespace ClinicaHumaita.Services
                 // exclusao logica do user
                 user.Active = false;
                 //atualizar o user
-                var entryUser = _db.User.FirstOrDefault(e => e.Id == user.Id);
+                var entryUser = _db.Users.FirstOrDefault(e => e.Id == user.Id);
                 _db.Entry(entryUser).CurrentValues.SetValues(user);
                 await _db.SaveChangesAsync();
 
                 //buscar o user atualizado com suas dependecias 
-                entryUser = _db.User.Include(x => x.Person).FirstOrDefault(e => e.Id == user.Id);
+                entryUser = _db.Users.Include(x => x.Person).FirstOrDefault(e => e.Id == user.Id);
                 //retorna o usuario
                 return entryUser;
             }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace ClinicaHumaita.Services
@@ -17,25 +18,35 @@ namespace ClinicaHumaita.Services
         {
             _db = db;
         }
-        public async Task<Person> Add(Person newItem)
+        public async Task<Person> Create(Person newItem)
         {
             try
             {
-                await _db.Person.AddAsync(newItem);
+                //salvar no banco
+                var result = await _db.Person.AddAsync(newItem);
                 await _db.SaveChangesAsync();
-                return newItem;
-            }catch
+            }
+            catch
             {
+                // retorna uma exception em caso de falha na insercao
                 throw new InvalidDataException();
             }
+            //retornar o objeto que foi salvo
+            return newItem;
         }
         public async Task<Person> GetById(int id)
         {
+            //retorna person pelo id
             return await _db.Person.Where(a => a.id == id).FirstOrDefaultAsync();
         }
         public async Task<List<Person>> Get()
         {
-            return await _db.Person.ToListAsync();
+            //retorna lista sem as pessoas que sao usuarios
+            var users = await _db.Users.Select(e => e.Person).ToListAsync();
+            var persons = _db.Person.ToListAsync().Result.Except(users).ToList();
+
+            //retorna uma lista de person
+            return persons;
         }
     }
 }

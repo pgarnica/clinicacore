@@ -32,7 +32,7 @@ namespace ClinicaHumaita.Controllers
                 return RedirectToAction(nameof(Index), "Home");
             }
             //Carrega a View Create
-            return View(nameof(Create));
+            return View();
         }
         
         //alterada a route para nao exibir o /user/ e validando o token
@@ -41,12 +41,6 @@ namespace ClinicaHumaita.Controllers
         [Route("/Cadastro")]
         public async Task<IActionResult> Create(Users user)
         {
-            //valida se existe um usuario logado
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(Index), "Home");
-            }
-
             //valida se o username esta em uso
             var userNameExists = await _service.GetByUserName(user.UserName);
             if (userNameExists != null)
@@ -71,7 +65,7 @@ namespace ClinicaHumaita.Controllers
                 }
             }
             //em caso de erro na validacao ou de inserção retorna para a view
-            return View(nameof(Create),user);
+            return View(user);
         }
         
         //Editar Usuario
@@ -87,7 +81,7 @@ namespace ClinicaHumaita.Controllers
                 //busca o usuario logado pelo username
                 var user = _service.GetByUserName(username).Result;
                 //retorna para a view um model do usuario logado
-                return View(nameof(Edit),user);
+                return View(user);
             }
             //se o username estiver vazio, redireciona para pagina de login
             return RedirectToAction(nameof(Login));
@@ -130,7 +124,7 @@ namespace ClinicaHumaita.Controllers
             }
 
             //em caso de erro na validacao ou de inserção retorna para a view
-            return View(nameof(Edit), user);
+            return View(user);
         }
 
         //Editar Usuario
@@ -143,7 +137,7 @@ namespace ClinicaHumaita.Controllers
             //busca o usuario logado pelo username
             var user = _service.GetByUserName(username).Result;
             //retorna para a view um model do usuario logado
-            return View(nameof(Remove), user);
+            return View(user);
         }
 
         //Editar Usuario
@@ -177,7 +171,7 @@ namespace ClinicaHumaita.Controllers
             }
 
             //em caso de erro na validacao ou de inserção retorna para a view
-            return View(nameof(Remove), user);
+            return View(user);
         }
 
         //alterada a route para nao exibir o /user/
@@ -191,7 +185,7 @@ namespace ClinicaHumaita.Controllers
             }
 
             //Carrega a View Login
-            return View(nameof(Login));
+            return View();
         }
         //alterada a route para nao exibir o /user/ e validando o token
         
@@ -211,7 +205,6 @@ namespace ClinicaHumaita.Controllers
                     if (user == null)
                     {
                         ModelState.AddModelError("Password", "Usuário ou senha inválidos.");
-                        return View(nameof(Login));
                     }
                     else
                     {
@@ -230,7 +223,7 @@ namespace ClinicaHumaita.Controllers
                 }
             }
             //em caso de erro na validacao retorna para a view
-            return View(nameof(Login));
+            return View();
         }
         
         //realiza o logout do usuario
@@ -241,7 +234,7 @@ namespace ClinicaHumaita.Controllers
             await LogoutUser();
 
             //redireciona para o login
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction(nameof(Login));
         }
         
         //seta o login do usuario no claim

@@ -15,7 +15,7 @@ namespace ClinicaHumaita.Models
 
 
         public DbSet<Person> Person { get; set; }
-        public DbSet<Users> User { get; set; }
+        public DbSet<Users> Users { get; set; }
 
 
         

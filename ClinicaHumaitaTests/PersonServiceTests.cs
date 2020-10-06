@@ -45,7 +45,7 @@ namespace ClinicaHumaitaTests
 
                 // 2. Act 
                 var rls = new PersonService(context);
-                await rls.Add(rl);
+                await rls.Create(rl);
             }
 
             using (var context = new ClinicaContext(options))
@@ -80,7 +80,7 @@ namespace ClinicaHumaitaTests
 
                 // 2. Act 
                 var rls = new PersonService(context);
-                await rls.Add(rl);
+                await rls.Create(rl);
             }
 
             using (var context = new ClinicaContext(options))
