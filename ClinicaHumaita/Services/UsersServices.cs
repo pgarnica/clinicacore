@@ -118,5 +118,27 @@ namespace ClinicaHumaita.Services
 
             return strBuilder.ToString();
         }
+        public async Task<Users> Remove(Users user)
+        {
+            try
+            {
+                // exclusao logica do user
+                user.Active = false;
+                //atualizar o user
+                var entryUser = _db.User.FirstOrDefault(e => e.Id == user.Id);
+                _db.Entry(entryUser).CurrentValues.SetValues(user);
+                await _db.SaveChangesAsync();
+
+                //buscar o user atualizado com suas dependecias 
+                entryUser = _db.User.Include(x => x.Person).FirstOrDefault(e => e.Id == user.Id);
+                //retorna o usuario
+                return entryUser;
+            }
+            catch (Exception ex)
+            {
+                //retorna uma exception em caso de falha
+                throw ex;
+            }
+        }
     }
 }

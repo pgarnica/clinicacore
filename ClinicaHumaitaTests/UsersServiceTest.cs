@@ -137,7 +137,7 @@ namespace ClinicaHumaitaTests
                 rl.UserName = new_username;
                 rl.Password = new_password;
 
-                //adiciona o novo User
+                //edita o  User
                 await rls.Edit(rl);
             
                //busca o novo usuario
@@ -151,6 +151,47 @@ namespace ClinicaHumaitaTests
                 Assert.Equal(new_name, result.Person.name);
                 Assert.Equal(new_email, result.Person.email);
                 Assert.Equal(rls.MD5Hash(new_password), result.Password);
+            }
+        }
+
+        [Theory]
+        [InlineData("Paulo Garnica", "paulo.garnica@gail.com", "paulogarnica", "senha123")]
+        public async Task Remove_User(string name, string email, string username, string password)
+        {
+            //arrange
+            //Cria uma database virtual para nao sujar a base com testes
+            var options = new DbContextOptionsBuilder<ClinicaContext>().UseInMemoryDatabase(databaseName: "TestNewListDb").Options;
+
+            // cria o context para acesso ao db, utilizado a base virtual
+            using (var context = new ClinicaContext(options))
+            {
+                // 1. Arrange
+                //Cria um novo objeto user com os parametros informados
+                var rl = new Users
+                {
+                    UserName = username,
+                    Password = password,
+                    Person = new Person { name = name, email = email }
+                };
+
+                // 2. Act 
+                //instancia o servico para ser utilizado com a base virtual
+                var rls = new UsersServices(context);
+
+                //adiciona o novo User
+                await rls.Create(rl);
+
+                //busca o usuario no banco pelo username
+                rl = rls.GetByUserName(username).Result;
+
+                //remove logicamente o usuario
+                var result = await rls.Remove(rl);
+
+                // 3. Assert
+                //testa se o retorno nao eh nulo
+                Assert.NotNull(result);
+                //testa se os mesmo parametros informados sao recebidos
+                Assert.Equal(false, result.Active);
             }
         }
     }

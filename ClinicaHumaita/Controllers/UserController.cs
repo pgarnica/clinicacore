@@ -99,12 +99,6 @@ namespace ClinicaHumaita.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Users user)
         {
-            //valida se existe um usuario logado
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-
             var username = _service.GetByUserName(user.UserName).Result;
             //Busca o username do usuario logado
             var usernameLogged = User.Claims.Where(x => x.Type == "usersname").FirstOrDefault().Value;
@@ -138,7 +132,54 @@ namespace ClinicaHumaita.Controllers
             //em caso de erro na validacao ou de inserção retorna para a view
             return View(nameof(Edit), user);
         }
-        
+
+        //Editar Usuario
+        [Authorize]
+        public IActionResult Remove()
+        {
+            //Busca o username do usuario logado
+            var username = User.Claims.Where(x => x.Type == "usersname").FirstOrDefault().Value;
+
+            //busca o usuario logado pelo username
+            var user = _service.GetByUserName(username).Result;
+            //retorna para a view um model do usuario logado
+            return View(nameof(Remove), user);
+        }
+
+        //Editar Usuario
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Remove(Users user)
+        {
+            //busca dados do usuario para ser removido
+            var user_to_remove = _service.GetByUserName(user.UserName).Result;
+           
+            //desloga o usuario
+            bool logoff = await LogoutUser();
+
+            //valida usuario foi deslogado
+            if (logoff)
+            {
+                try
+                {
+                    // Chama a classe de servico e aguarda a execucao
+                    var newuser = await _service.Remove(user_to_remove);
+                    
+                    //redireciona para Index da PersonController
+                    return RedirectToAction(nameof(Login));
+                }
+                catch
+                {
+                    //retorna erro em caso de falha na insercao
+                    ModelState.AddModelError("UserName", "Problema ao realizar requisição! Atualize a página e tente novamente.");
+                }
+            }
+
+            //em caso de erro na validacao ou de inserção retorna para a view
+            return View(nameof(Remove), user);
+        }
+
         //alterada a route para nao exibir o /user/
         [Route("/Login")]
         public IActionResult Login()

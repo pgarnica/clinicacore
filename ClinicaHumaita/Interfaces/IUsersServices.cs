@@ -10,6 +10,7 @@ namespace ClinicaHumaita.Interfaces
     {
         Task<Users> Create(Users user);
         Task<Users> Edit(Users user);
+        Task<Users> Remove(Users user);
         Task<Users> Login(string username, string password);
         Task<Users> GetByUserName(string username);
         string MD5Hash(string text);

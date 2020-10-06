@@ -4,9 +4,9 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
-<h4>Users</h4>
+
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -47,11 +47,6 @@
                 <label class="control-label">Confirme sua senha</label>
                 <input id="confirmaPassword" type="password" class="form-control" onblur="validatePassword()" required />
                 <span id="message"></span>
-            </div>
-            <div class="form-group" hidden>
-                <label asp-for="Active" class="control-label"></label>
-                <input hidden asp-for="Active" class="form-control" />
-                <span asp-validation-for="Active" class="text-danger"></span>
             </div>
             <div class="form-group" hidden>
                 <label asp-for="Active" class="control-label"></label>
