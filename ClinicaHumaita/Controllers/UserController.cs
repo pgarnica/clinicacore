@@ -21,6 +21,7 @@ namespace ClinicaHumaita.Controllers
         {
             _service = service;
         }
+        
         //alterada a route para nao exibir o /user/
         [Route("/Cadastro")]
         public IActionResult Create()
@@ -33,6 +34,7 @@ namespace ClinicaHumaita.Controllers
             //Carrega a View Create
             return View(nameof(Create));
         }
+        
         //alterada a route para nao exibir o /user/ e validando o token
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -71,8 +73,9 @@ namespace ClinicaHumaita.Controllers
             //em caso de erro na validacao ou de inserção retorna para a view
             return View(nameof(Create),user);
         }
-        [Authorize]
+        
         //Editar Usuario
+        [Authorize]
         public IActionResult Edit()
         {
             //Busca o username do usuario logado
@@ -89,10 +92,11 @@ namespace ClinicaHumaita.Controllers
             //se o username estiver vazio, redireciona para pagina de login
             return RedirectToAction(nameof(Login));
         }
+
+        //Editar Usuario
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //Editar Usuario
         public async Task<IActionResult> Edit(Users user)
         {
             //valida se existe um usuario logado
@@ -134,6 +138,7 @@ namespace ClinicaHumaita.Controllers
             //em caso de erro na validacao ou de inserção retorna para a view
             return View(nameof(Edit), user);
         }
+        
         //alterada a route para nao exibir o /user/
         [Route("/Login")]
         public IActionResult Login()
@@ -148,6 +153,7 @@ namespace ClinicaHumaita.Controllers
             return View(nameof(Login));
         }
         //alterada a route para nao exibir o /user/ e validando o token
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/Login")]
@@ -185,6 +191,7 @@ namespace ClinicaHumaita.Controllers
             //em caso de erro na validacao retorna para a view
             return View(nameof(Login));
         }
+        
         //realiza o logout do usuario
         [HttpGet]
         public async Task<IActionResult>  Logout()
@@ -195,6 +202,7 @@ namespace ClinicaHumaita.Controllers
             //redireciona para o login
             return RedirectToAction("Index", "Login");
         }
+        
         //seta o login do usuario no claim
         private async Task<bool> LoginUser(Users user)
         {
@@ -218,6 +226,7 @@ namespace ClinicaHumaita.Controllers
                 return false;
             }
         }
+        
         //seta o logout do usuario no claim
         private async Task<bool> LogoutUser()
         {
