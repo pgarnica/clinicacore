@@ -1,5 +1,5 @@
 {
-  "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj",
+  "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "3.0",
@@ -14392,63 +14392,63 @@
   "RootNamespace": "ClinicaHumaita",
   "Documents": [
     {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
-      "TargetPath": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\Home\\Index.cshtml",
-      "TargetPath": "Views\\Home\\Index.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\User\\Create.cshtml",
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\User\\Create.cshtml",
       "TargetPath": "Views\\User\\Create.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\Shared\\_Layout.cshtml",
-      "TargetPath": "Views\\Shared\\_Layout.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\User\\Login.cshtml",
-      "TargetPath": "Views\\User\\Login.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\Person\\Index.cshtml",
-      "TargetPath": "Views\\Person\\Index.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\User\\Edit.cshtml",
-      "TargetPath": "Views\\User\\Edit.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\Shared\\Error.cshtml",
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\Shared\\Error.cshtml",
       "TargetPath": "Views\\Shared\\Error.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\_ViewImports.cshtml",
-      "TargetPath": "Views\\_ViewImports.cshtml",
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\User\\Edit.cshtml",
+      "TargetPath": "Views\\User\\Edit.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\_ViewStart.cshtml",
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\Shared\\_Layout.cshtml",
+      "TargetPath": "Views\\Shared\\_Layout.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\User\\Login.cshtml",
+      "TargetPath": "Views\\User\\Login.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
+      "TargetPath": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\Home\\Privacy.cshtml",
+      "TargetPath": "Views\\Home\\Privacy.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\_ViewStart.cshtml",
       "TargetPath": "Views\\_ViewStart.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\Person\\Create.cshtml",
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\Person\\Create.cshtml",
       "TargetPath": "Views\\Person\\Create.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "e:\\ClinicaHumaita\\ClinicaHumaita\\Views\\Home\\Privacy.cshtml",
-      "TargetPath": "Views\\Home\\Privacy.cshtml",
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\Home\\Index.cshtml",
+      "TargetPath": "Views\\Home\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\_ViewImports.cshtml",
+      "TargetPath": "Views\\_ViewImports.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "d:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\Views\\Person\\Index.cshtml",
+      "TargetPath": "Views\\Person\\Index.cshtml",
       "FileKind": "mvc"
     }
   ],

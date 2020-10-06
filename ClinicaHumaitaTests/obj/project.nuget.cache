@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nyY9J/jQxegQVeJpnZWlQxJdmb6qDEWAFB6ytTUP78VUNSuefl1g0rGsK5Dh1+Teo0I+Oj66N8Yb3YZ2KSIgkQ==",
+  "dgSpecHash": "sd0Lx0IIf9GHyW+QM/TZHPGPZJ/T5biDhtTxvnz4ezLOBKLL+HadslKz8IeYwACXIIg7DQnaFp52oYAOhogBug==",
   "success": true,
-  "projectFilePath": "E:\\ClinicaHumaita\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj",
+  "projectFilePath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Garnica\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\Garnica\\.nuget\\packages\\coverlet.collector\\1.3.0\\coverlet.collector.1.3.0.nupkg.sha512",

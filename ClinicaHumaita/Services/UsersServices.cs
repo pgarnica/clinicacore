@@ -14,7 +14,6 @@ namespace ClinicaHumaita.Services
 {
     public class UsersServices : IUsersServices
     {
-
         private readonly ClinicaContext _db;
         public ClinicaContext DbContext { get; private set; }
         public UsersServices(ClinicaContext db)
@@ -99,7 +98,6 @@ namespace ClinicaHumaita.Services
                 throw ex;
             }
         }
-
         public string MD5Hash(string text)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
@@ -120,6 +118,5 @@ namespace ClinicaHumaita.Services
 
             return strBuilder.ToString();
         }
-
     }
 }

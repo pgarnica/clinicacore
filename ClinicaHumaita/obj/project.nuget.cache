@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Hlbo6eMzDLZz0MbHvVK+yGdU4MiEsOQGh/z1gtEx/7tjBE2l2xwBCyFPSrzQ7uFEvlXZ2VdI7La9nIl2VzZAxA==",
+  "dgSpecHash": "Y7WDcZeKu1reYTztvPdm4FCAgTNgG0WggFwy5zUaE+BIHqj2J3wUGDUUKKAayLcadQ+Q3A1PUja/zf1EI3UjnA==",
   "success": true,
-  "projectFilePath": "E:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj",
+  "projectFilePath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Garnica\\.nuget\\packages\\castle.core\\4.4.0\\castle.core.4.4.0.nupkg.sha512",
     "C:\\Users\\Garnica\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",

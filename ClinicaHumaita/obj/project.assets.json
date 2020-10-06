@@ -8807,11 +8807,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj",
+      "projectUniqueName": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj",
       "projectName": "ClinicaHumaita",
-      "projectPath": "E:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj",
+      "projectPath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj",
       "packagesPath": "C:\\Users\\Garnica\\.nuget\\packages\\",
-      "outputPath": "E:\\ClinicaHumaita\\ClinicaHumaita\\obj\\",
+      "outputPath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"

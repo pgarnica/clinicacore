@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\ClinicaHumaita\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj": {}
+    "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj": {}
   },
   "projects": {
-    "E:\\ClinicaHumaita\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj": {
+    "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ClinicaHumaita\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj",
+        "projectUniqueName": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj",
         "projectName": "ClinicaHumaitaTests",
-        "projectPath": "E:\\ClinicaHumaita\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj",
+        "projectPath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaitaTests\\ClinicaHumaitaTests.csproj",
         "packagesPath": "C:\\Users\\Garnica\\.nuget\\packages\\",
-        "outputPath": "E:\\ClinicaHumaita\\ClinicaHumaitaTests\\obj\\",
+        "outputPath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaitaTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -31,8 +31,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "E:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj": {
-                "projectPath": "E:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj"
+              "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj": {
+                "projectPath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj"
               }
             }
           }
@@ -105,14 +105,14 @@
         }
       }
     },
-    "E:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj": {
+    "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj",
+        "projectUniqueName": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj",
         "projectName": "ClinicaHumaita",
-        "projectPath": "E:\\ClinicaHumaita\\ClinicaHumaita\\ClinicaHumaita.csproj",
+        "projectPath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\ClinicaHumaita.csproj",
         "packagesPath": "C:\\Users\\Garnica\\.nuget\\packages\\",
-        "outputPath": "E:\\ClinicaHumaita\\ClinicaHumaita\\obj\\",
+        "outputPath": "D:\\Projetos\\Estudo\\clinicacore\\ClinicaHumaita\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
