@@ -121,7 +121,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                  //adiciona person
+                  //remove person
                     var result = await _service.Remove(person);
                     //redireciona para lista de persons
                     return RedirectToAction(nameof(Index));
@@ -134,6 +134,18 @@ namespace ClinicaHumaita.Controllers
             }
         }
 
+        [Authorize]
+        public async Task<IActionResult> Detail(int? id)
+        {
 
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var pessoa = await _service.GetById(int.Parse(id.ToString()));
+
+            return View(pessoa);
+        }
     }
 }
