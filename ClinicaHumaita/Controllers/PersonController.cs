@@ -13,19 +13,21 @@ namespace ClinicaHumaita.Controllers
 {
     public class PersonController : Controller
     {
-
+        //instacia do servico de pessoas para evitar acesso diretos aos dados
         private readonly IPersonServices _service;
         public PersonController(IPersonServices service)
         {
             _service = service;
         }
 
+        //carrega lista de pessoas
         [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _service.Get());
         }
 
+        //adicionar uma pessoa
         [Authorize]
         public IActionResult Create()
         {
@@ -59,6 +61,7 @@ namespace ClinicaHumaita.Controllers
             }
         }
 
+        //editar uma pessoa
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -100,6 +103,7 @@ namespace ClinicaHumaita.Controllers
             }
         }
 
+        //remover uma pessoa
         [Authorize]
         public async Task<IActionResult> Remove(int? id)
         {
@@ -134,6 +138,7 @@ namespace ClinicaHumaita.Controllers
             }
         }
 
+        //mostrar detalhes da pessoa
         [Authorize]
         public async Task<IActionResult> Detail(int? id)
         {
