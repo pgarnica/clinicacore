@@ -1,17 +1,22 @@
 ﻿@model ClinicaHumaita.Models.Person
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Adicionar</h1>
+<h1>Editar </h1>
 
 <h4>Pessoa</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden>
+                <label asp-for="id" class="control-label"></label>
+                <input asp-for="id" class="form-control" />
+                <span asp-validation-for="id" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="name" class="control-label"></label>
                 <input asp-for="name" class="form-control" />
@@ -23,10 +28,9 @@
                 <span asp-validation-for="email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Cadastrar" class="btn btn-primary" />
+                <input type="submit" value="Editar" class="btn btn-primary" />
                 <a asp-action="Index" asp-controller="Home" class="btn btn-danger ml-5">Voltar</a>
             </div>
-         
         </form>
     </div>
 </div>

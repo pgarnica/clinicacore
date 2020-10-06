@@ -59,5 +59,46 @@ namespace ClinicaHumaita.Controllers
             }
         }
 
+        [Authorize]
+        public async Task<IActionResult> Edit(int? id)
+        {
+
+            if(id == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var pessoa = await _service.GetById(int.Parse(id.ToString()));
+                
+            return View(pessoa);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(Person person)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {   //adiciona person
+                    var result = await _service.Edit(person);
+                    //redireciona para lista de persons
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    //se a modelstate nao for valida retorna erro
+                    ModelState.AddModelError("email", "Dados inválidos");
+                    return View(person);
+                }
+            }
+            catch
+            {
+                //em caso de erro retorno uma excpetion.
+                throw new InvalidDataException();
+            }
+        }
+
     }
 }
