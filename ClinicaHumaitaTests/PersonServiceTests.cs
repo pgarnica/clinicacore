@@ -141,9 +141,8 @@ namespace ClinicaHumaitaTests
 
                 // 3. Assert
                 //verifica se os dados alterados estao corretos
-                Assert.NotNull(result);
                 Assert.Null(buscaremovido);
-                Assert.Equal(true, result);
+                Assert.True(result);
             }
         }
 
