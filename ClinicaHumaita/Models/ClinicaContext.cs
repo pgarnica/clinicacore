@@ -12,13 +12,7 @@ namespace ClinicaHumaita.Models
         public ClinicaContext(DbContextOptions<ClinicaContext> options) : base(options)
         {
         }
-
-
         public DbSet<Person> Person { get; set; }
         public DbSet<Users> Users { get; set; }
-
-
-        
-
     }
 }
