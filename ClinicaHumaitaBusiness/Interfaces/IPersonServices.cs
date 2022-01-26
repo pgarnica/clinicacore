@@ -1,10 +1,8 @@
-﻿using ClinicaHumaita.Models;
-using System;
+﻿using ClinicaHumaita.Data.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace ClinicaHumaita.Interfaces
+namespace ClinicaHumaita.Business.Interfaces
 {
     public interface IPersonServices
     {
@@ -12,6 +10,6 @@ namespace ClinicaHumaita.Interfaces
         Task<Person> Edit(Person person);
         Task<bool> Remove(Person person);
         Task<Person> GetById(int id);
-        Task<List<Person>> Get();
+        Task<List<Person>> GetUsersPersons();
     }
 }

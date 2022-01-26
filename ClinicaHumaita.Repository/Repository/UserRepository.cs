@@ -1,26 +1,25 @@
-﻿using ClinicaHumaita.Interfaces;
-using ClinicaHumaita.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using ClinicaHumaita.Data.Context;
+using ClinicaHumaita.Data.Interfaces;
+using ClinicaHumaita.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClinicaHumaita.Services
+namespace ClinicaHumaita.Data.Repository
 {
-    public class UsersServices : IUsersServices
+    public class UserRepository : IUserRepository
     {
         private readonly ClinicaContext _db;
         public ClinicaContext DbContext { get; private set; }
-        public UsersServices(ClinicaContext db)
+        public UserRepository(ClinicaContext db)
         {
             _db = db;
         }
-        public async Task<Users> Create(Users user)
+        public async Task<User> Create(User user)
         {
             try
             {
@@ -41,44 +40,37 @@ namespace ClinicaHumaita.Services
             //retornar o objeto que foi salvo
             return user;
         }
-        public async Task<Users> GetByUserName(string username)
+        public async Task<User> GetByUserName(string username)
         {
             //include para retornar os dados de person dentro do user
             var user = await _db.Users.Include(x=>x.Person).FirstOrDefaultAsync(x => x.UserName == username);
             return user;
         }
-        public async Task<Users> Login(string username, string password)
-        {
-            //include para retornar os dados de person dentro do user
-            var user = await _db.Users.Include(x=>x.Person).FirstOrDefaultAsync(x => x.UserName == username && x.Active == true);
-
-            if(user != null)
-            {
-                //valida senha criptografada
-               if (user.Password == MD5Hash(password))
-                {
-                    //atualiza o last login
-                    user.Last_login = DateTime.Now;
-                     _db.Entry(user).State = EntityState.Modified;
-                    await _db.SaveChangesAsync();
-                    //retorna o usuario
-                    return user;
-                }
-            }
-
-            return null;
-        }
-        public async Task<Users> Edit(Users user)
+        public async Task<User> Login(string username, string password)
         {
             try
             {
-                //criptografar a senha
-                user.Password = MD5Hash(user.Password);
+                //include para retornar os dados de person dentro do user
+                return await _db.Users.Include(x => x.Person)
+                                      .FirstOrDefaultAsync(x => x.UserName.Equals(username)
+                                                             && x.Active
+                                                             && x.Password.Equals(password));
+            }
+            catch
+            {
+                throw new InvalidDataException();
+            }
+        }
 
+        public async Task<User> Edit(User user)
+        {
+            try
+            {
+                 
                 //atualizar o user
                 var entryUser = _db.Users.FirstOrDefault(e => e.Id == user.Id);
                 _db.Entry(entryUser).CurrentValues.SetValues(user);
-                await _db.SaveChangesAsync();
+                 
 
                 //atualizar a person
                 var entryPerson = _db.Person.FirstOrDefault(x => x.id == user.PersonId);
@@ -92,10 +84,10 @@ namespace ClinicaHumaita.Services
                 //retorna o usuario
                 return entryUser;
             }
-            catch(Exception ex)
+            catch
             {
                 //retorna uma exception em caso de falha
-                throw ex;
+                throw new InvalidDataException();
             }
         }
         public string MD5Hash(string text)
@@ -118,7 +110,7 @@ namespace ClinicaHumaita.Services
 
             return strBuilder.ToString();
         }
-        public async Task<Users> Remove(Users user)
+        public async Task<User> Remove(User user)
         {
             try
             {

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ClinicaHumaita.Interfaces;
-using ClinicaHumaita.Models;
+using ClinicaHumaita.Business.Interfaces;
+using ClinicaHumaita.Data.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaHumaita.Controllers
@@ -16,8 +14,8 @@ namespace ClinicaHumaita.Controllers
     public class UserController : Controller
     {
         //instancia o servico de usuario para ser utilizado pela controller e evitar acesso direto aos dados.
-        private readonly IUsersServices _service;
-        public UserController(IUsersServices service)
+        private readonly IUserServices _service;
+        public UserController(IUserServices service)
         {
             _service = service;
         }
@@ -39,7 +37,7 @@ namespace ClinicaHumaita.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/Cadastro")]
-        public async Task<IActionResult> Create(Users user)
+        public async Task<IActionResult> Create(User user)
         {
             //valida se o username esta em uso
             var userNameExists = await _service.GetByUserName(user.UserName);
@@ -91,7 +89,7 @@ namespace ClinicaHumaita.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Users user)
+        public async Task<IActionResult> Edit(User user)
         {
             var username = _service.GetByUserName(user.UserName).Result;
             //Busca o username do usuario logado
@@ -144,7 +142,7 @@ namespace ClinicaHumaita.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Remove(Users user)
+        public async Task<IActionResult> Remove(User user)
         {
             //busca dados do usuario para ser removido
             var user_to_remove = _service.GetByUserName(user.UserName).Result;
@@ -238,7 +236,7 @@ namespace ClinicaHumaita.Controllers
         }
         
         //seta o login do usuario no claim
-        private async Task<bool> LoginUser(Users user)
+        private async Task<bool> LoginUser(User user)
         {
             try
             {

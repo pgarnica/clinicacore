@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClinicaHumaita.Repository\ClinicaHumaita.Data.csproj" />
+    <ProjectReference Include="..\ClinicaHumaita.Shared\ClinicaHumaita.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

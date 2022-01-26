@@ -1,11 +1,8 @@
 ﻿
+using ClinicaHumaita.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ClinicaHumaita.Models
+namespace ClinicaHumaita.Data.Context
 {
     public class ClinicaContext : DbContext
     {
@@ -13,6 +10,6 @@ namespace ClinicaHumaita.Models
         {
         }
         public DbSet<Person> Person { get; set; }
-        public DbSet<Users> Users { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

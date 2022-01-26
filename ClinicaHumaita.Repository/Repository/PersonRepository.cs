@@ -1,20 +1,19 @@
-﻿using ClinicaHumaita.Interfaces;
-using ClinicaHumaita.Models;
+﻿using ClinicaHumaita.Data.Context;
+using ClinicaHumaita.Data.Interfaces;
+using ClinicaHumaita.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace ClinicaHumaita.Services
+namespace ClinicaHumaita.Data.Repository
 {
-    public class PersonService : IPersonServices
+    public class PersonRepository : IPersonRepository
     {
         private readonly ClinicaContext _db;
         public ClinicaContext DbContext { get; private set; }
-        public PersonService(ClinicaContext db)
+        public PersonRepository(ClinicaContext db)
         {
             _db = db;
         }
@@ -74,7 +73,7 @@ namespace ClinicaHumaita.Services
             //retorna person pelo id
             return await _db.Person.Where(a => a.id == id).FirstOrDefaultAsync();
         }
-        public async Task<List<Person>> Get()
+        public async Task<List<Person>> GetUsersPersons()
         {
             //retorna lista sem as pessoas que sao usuarios
             var users = await _db.Users.Select(e => e.Person).ToListAsync();

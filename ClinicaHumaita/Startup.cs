@@ -1,8 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ClinicaHumaita.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,9 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using ClinicaHumaita.Interfaces;
 using ClinicaHumaita.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ClinicaHumaita.Data.Context;
+using ClinicaHumaita.Business.Interfaces;
+using ClinicaHumaita.Data.Interfaces;
+using ClinicaHumaita.Data.Repository;
 
 namespace ClinicaHumaita
 {
@@ -33,13 +32,25 @@ namespace ClinicaHumaita
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
-         
+
+            string urlLocal = string.Empty;
+            string urlProd = string.Empty;
+            urlLocal = "192.168.1.4";
+            urlProd = "192.168.1.4";
+
+            string connectionString = Configuration.GetConnectionString("Clinica").Replace("LocalURL", urlLocal).Replace("ProdURl", urlProd);
+
+            Console.WriteLine(connectionString);
+
             //Adiociona context para o db
-            services.AddDbContext<ClinicaContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Clinica")));
+            services.AddDbContext<ClinicaContext>(options => options.UseSqlServer(connectionString));
 
             //Ligação entre a internface e a classe implementadora.
             services.AddScoped<IPersonServices, PersonService>();
-            services.AddScoped<IUsersServices, UsersServices>();
+            services.AddScoped<IUserServices, UserServices>();
+
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             //Referencia ao autenticador, redirecionando pro login 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

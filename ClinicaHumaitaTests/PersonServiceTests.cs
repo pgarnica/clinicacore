@@ -1,29 +1,28 @@
 using ClinicaHumaita.Controllers;
-using ClinicaHumaita.Models;
-using ClinicaHumaita.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
 using Xunit;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Graph;
-using Person = ClinicaHumaita.Models.Person;
+using Person = ClinicaHumaita.Data.Models.Person;
 using ClinicaHumaita.Services;
 using System.Linq;
+using ClinicaHumaita.Business.Interfaces;
+using ClinicaHumaita.Data.Context;
+using ClinicaHumaita.Data.Interfaces;
+using ClinicaHumaita.Data.Repository;
 
 namespace ClinicaHumaitaTests
 {
     public class PersonServiceTests
     {
         private readonly Mock<IPersonServices> _mockPerson;
+        private readonly Mock<IPersonRepository> _mockPersonRepository;
         private readonly PersonController _personController;
 
         public PersonServiceTests()
         {
             _mockPerson = new Mock<IPersonServices>();
-            _personController = new PersonController(_mockPerson.Object);
+            _mockPersonRepository = new Mock<IPersonRepository>();
         }
 
         [Theory]
@@ -47,11 +46,12 @@ namespace ClinicaHumaitaTests
 
                 // 2. Act 
                 //instancia o servico para ser utilizado com a base virtual
-                var rls = new PersonService(context);
+                var rls = new PersonService(new Mock);
+
                 await rls.Create(rl);
         
                 //busca uma lista das pessoas inseridas
-                var result = await rls.Get();
+                var result = await rls.GetUsersPersons();
 
                 // 3. Assert
                 //verifica se os resultados estao corretos

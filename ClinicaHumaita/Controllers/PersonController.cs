@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ClinicaHumaita.Interfaces;
-using ClinicaHumaita.Models;
-using ClinicaHumaita.Services;
+using ClinicaHumaita.Business.Interfaces;
+using ClinicaHumaita.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +23,7 @@ namespace ClinicaHumaita.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _service.Get());
+            return View(await _service.GetUsersPersons());
         }
 
         //adicionar uma pessoa

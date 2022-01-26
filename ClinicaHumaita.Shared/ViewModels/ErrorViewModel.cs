@@ -1,6 +1,6 @@
 using System;
 
-namespace ClinicaHumaita.Models
+namespace ClinicaHumaita.Shared.ViewModels
 {
     public class ErrorViewModel
     {

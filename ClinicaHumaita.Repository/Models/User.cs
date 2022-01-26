@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ClinicaHumaita.Models
+namespace ClinicaHumaita.Data.Models
 {
     [Table("Users")]
-    public class Users
+    public class User
     {
         [Key]
         public int Id { get; set; }
@@ -28,7 +25,7 @@ namespace ClinicaHumaita.Models
 
         public DateTime? Last_login { get; set; }
 
-        public bool? Active { get; set; }
+        public bool Active { get; set; }
 
         public virtual Person Person { get; set; }
 
