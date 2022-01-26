@@ -33,10 +33,8 @@ namespace ClinicaHumaita
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
             });
 
-            string urlLocal = string.Empty;
-            string urlProd = string.Empty;
-            urlLocal = "192.168.1.4";
-            urlProd = "192.168.1.4";
+            string urlLocal = "192.168.1.4";
+            string urlProd = "192.168.0.110";
 
             string connectionString = Configuration.GetConnectionString("Clinica").Replace("LocalURL", urlLocal).Replace("ProdURl", urlProd);
 
@@ -46,8 +44,8 @@ namespace ClinicaHumaita
             services.AddDbContext<ClinicaContext>(options => options.UseSqlServer(connectionString));
 
             //Ligação entre a internface e a classe implementadora.
-            services.AddScoped<IPersonServices, PersonService>();
-            services.AddScoped<IUserServices, UserServices>();
+            services.AddScoped<IPersonService, PersonService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IUserRepository, UserRepository>();

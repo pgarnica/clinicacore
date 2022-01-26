@@ -14,8 +14,8 @@ namespace ClinicaHumaita.Controllers
     public class UserController : Controller
     {
         //instancia o servico de usuario para ser utilizado pela controller e evitar acesso direto aos dados.
-        private readonly IUserServices _service;
-        public UserController(IUserServices service)
+        private readonly IUserService _service;
+        public UserController(IUserService service)
         {
             _service = service;
         }

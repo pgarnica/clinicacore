@@ -29,21 +29,22 @@ namespace ClinicaHumaita.Data.Repository
                 //criptografar a senha
                 user.Password = MD5Hash(user.Password);
                 //salvar no banco
-                var result = await _db.Users.AddAsync(user);
+                await _db.Users.AddAsync(user);
                 await _db.SaveChangesAsync();
+
+                //retornar o objeto que foi salvo
+                return user;
             }
-            catch  
+            catch (Exception ex) 
             {
                 // retorna uma exception em caso de falha na insercao
-                throw new InvalidDataException();
+                throw ex;
             }
-            //retornar o objeto que foi salvo
-            return user;
         }
         public async Task<User> GetByUserName(string username)
         {
             //include para retornar os dados de person dentro do user
-            var user = await _db.Users.Include(x=>x.Person).FirstOrDefaultAsync(x => x.UserName == username);
+            var user = await _db.Users.Include(x=>x.Person).FirstOrDefaultAsync(x => x.UserName == username && x.Active);
             return user;
         }
         public async Task<User> Login(string username, string password)

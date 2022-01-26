@@ -1,5 +1,4 @@
 ﻿using ClinicaHumaita.Data.Context;
-using ClinicaHumaita.Data.Interfaces;
 using ClinicaHumaita.Data.Models;
 using ClinicaHumaita.Data.Repository;
 using ClinicaHumaita.Services;

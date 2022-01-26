@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ClinicaHumaita.Business.Interfaces
 {
-    public interface IPersonServices
+    public interface IPersonService
     {
         Task<Person> Create(Person newItem);
         Task<Person> Edit(Person person);

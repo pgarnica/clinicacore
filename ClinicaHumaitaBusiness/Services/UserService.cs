@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace ClinicaHumaita.Services
 {
-    public class UserServices : IUserServices
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserServices(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
@@ -25,10 +25,10 @@ namespace ClinicaHumaita.Services
                 //retornar o objeto que foi salvo
                 return await _userRepository.Create(user);
             }
-            catch  
+            catch(Exception ex) 
             {
                 // retorna uma exception em caso de falha na insercao
-                throw new InvalidDataException();
+                throw ex;
             }
         }
         public async Task<User> GetByUserName(string username)
@@ -70,7 +70,7 @@ namespace ClinicaHumaita.Services
                 throw new InvalidDataException();
             }
         }
-        public string MD5Hash(string text)
+        private string MD5Hash(string text)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
 

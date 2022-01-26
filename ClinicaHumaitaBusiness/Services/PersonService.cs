@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClinicaHumaita.Services
 {
-    public class PersonService : IPersonServices
+    public class PersonService : IPersonService
     {
         public readonly IPersonRepository _personRepository;
         public PersonService(IPersonRepository personRepository)

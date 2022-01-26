@@ -13,8 +13,8 @@ namespace ClinicaHumaita.Controllers
     public class PersonController : Controller
     {
         //instacia do servico de pessoas para evitar acesso diretos aos dados
-        private readonly IPersonServices _service;
-        public PersonController(IPersonServices service)
+        private readonly IPersonService _service;
+        public PersonController(IPersonService service)
         {
             _service = service;
         }
