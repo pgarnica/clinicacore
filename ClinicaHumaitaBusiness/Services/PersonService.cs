@@ -1,6 +1,7 @@
 ﻿using ClinicaHumaita.Business.Interfaces;
 using ClinicaHumaita.Data.Interfaces;
 using ClinicaHumaita.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,7 +11,6 @@ namespace ClinicaHumaita.Services
 {
     public class PersonService : IPersonServices
     {
-
         public readonly IPersonRepository _personRepository;
         public PersonService(IPersonRepository personRepository)
         {
@@ -29,7 +29,6 @@ namespace ClinicaHumaita.Services
                 throw new InvalidDataException();
             }
         }
-
         public async Task<Person> Edit(Person person)
         {
             try
@@ -37,13 +36,12 @@ namespace ClinicaHumaita.Services
                 //retornar o objeto que foi salvo
                 return await _personRepository.Edit(person);
             }
-            catch
+            catch(Exception ex)
             {
                 // retorna uma exception em caso de falha na alteracao
-                throw new InvalidDataException();
+                throw ex;
             }
         }
-
         public async Task<bool> Remove(Person person)
         {
             try
@@ -56,7 +54,6 @@ namespace ClinicaHumaita.Services
                 throw new InvalidDataException();
             }
         }
-
         public async Task<Person> GetById(int id)
         {
             try

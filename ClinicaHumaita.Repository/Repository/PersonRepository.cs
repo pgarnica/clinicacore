@@ -2,6 +2,7 @@
 using ClinicaHumaita.Data.Interfaces;
 using ClinicaHumaita.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,54 +25,58 @@ namespace ClinicaHumaita.Data.Repository
                 //salvar no banco
                 var result = await _db.Person.AddAsync(newItem);
                 await _db.SaveChangesAsync();
+                //retornar o objeto que foi salvo
+                return newItem;
             }
             catch
             {
                 // retorna uma exception em caso de falha na insercao
                 throw new InvalidDataException();
             }
-            //retornar o objeto que foi salvo
-            return newItem;
         }
-
-        public async Task<Person> Edit(Person person)
+        public async Task<Person> Edit(Person personView)
         {
             try
             {
-                //salvar no banco
-                _db.Entry(person).State = EntityState.Modified;
+                var person = await _db.Person.FirstOrDefaultAsync(x=>x.id.Equals(personView.id));
+                person.name = personView.name;
+                person.email = personView.email;
                 await _db.SaveChangesAsync();
+                //retornar o objeto que foi salvo
+                return person;
             }
-            catch
+            catch (Exception ex)
             {
-                // retorna uma exception em caso de falha na insercao
-                throw new InvalidDataException();
+                // retorna uma exception em caso de falha na alteracao
+                throw ex;
             }
-            //retornar o objeto que foi salvo
-            return person;
         }
-
-        public async Task<bool> Remove(Person person)
+        public async Task<bool> Remove(Person personView)
         {
             try
             {
                 //salvar no banco
+                var person = await _db.Person.FirstOrDefaultAsync(x => x.id.Equals(personView.id));
                 var result = _db.Person.Remove(person);
                 await _db.SaveChangesAsync();
+                //retornar o objeto que foi salvo
+                return true;
             }
-            catch
+            catch (Exception ex)
             {
-                // retorna uma exception em caso de falha na insercao
-                throw new InvalidDataException();
+                // retorna uma exception em caso de falha na remocao
+                throw ex;
             }
-            //retornar o objeto que foi salvo
-            return true;
         }
-
         public async Task<Person> GetById(int id)
         {
             //retorna person pelo id
-            return await _db.Person.Where(a => a.id == id).FirstOrDefaultAsync();
+            return await _db.Person.Where(a => a.id == id).Select(x=> new Person
+            {
+                id = x.id,
+                name = x.name,
+                email = x.email,
+            }).FirstOrDefaultAsync();
         }
         public async Task<List<Person>> GetUsersPersons()
         {

@@ -5,11 +5,13 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicaHumaita", "ClinicaHumaita\ClinicaHumaita.csproj", "{D6581F7E-7D3D-4885-813C-CB323A87667F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicaHumaita.Business", "ClinicaHumaitaBusiness\ClinicaHumaita.Business.csproj", "{F499DD1D-1386-4942-879E-086F42FA6658}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicaHumaita.Business", "ClinicaHumaitaBusiness\ClinicaHumaita.Business.csproj", "{F499DD1D-1386-4942-879E-086F42FA6658}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicaHumaita.Data", "ClinicaHumaita.Repository\ClinicaHumaita.Data.csproj", "{DBE60115-9934-4A43-8A0C-F685294345EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicaHumaita.Data", "ClinicaHumaita.Repository\ClinicaHumaita.Data.csproj", "{DBE60115-9934-4A43-8A0C-F685294345EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicaHumaita.Shared", "ClinicaHumaita.Shared\ClinicaHumaita.Shared.csproj", "{3A0511FE-CB16-478A-AFD4-6B902014C0A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicaHumaita.Shared", "ClinicaHumaita.Shared\ClinicaHumaita.Shared.csproj", "{3A0511FE-CB16-478A-AFD4-6B902014C0A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicaHumaita.Tests", "ClinicaHumaita.Tests\ClinicaHumaita.Tests.csproj", "{D3BD0F32-F324-4393-9FF1-3B74B1C86C33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{3A0511FE-CB16-478A-AFD4-6B902014C0A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A0511FE-CB16-478A-AFD4-6B902014C0A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A0511FE-CB16-478A-AFD4-6B902014C0A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3BD0F32-F324-4393-9FF1-3B74B1C86C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3BD0F32-F324-4393-9FF1-3B74B1C86C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3BD0F32-F324-4393-9FF1-3B74B1C86C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3BD0F32-F324-4393-9FF1-3B74B1C86C33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
