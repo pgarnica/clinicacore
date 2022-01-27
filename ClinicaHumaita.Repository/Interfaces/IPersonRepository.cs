@@ -1,15 +1,17 @@
 ﻿using ClinicaHumaita.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ClinicaHumaita.Data.Interfaces
 {
-    public interface IPersonRepository
+    public interface IPersonRepository : IDisposable
     {
-        Task<Person> Create(Person newItem);
-        Task<Person> Edit(Person person);
-        Task<bool> Remove(Person person);
+        Task<Person> Add(Person newPerson);
+        Task<Person> Update(Person person);
+        Task<bool> Delete(Person person);
         Task<Person> GetById(int id);
-        Task<List<Person>> GetUsersPersons();
+        Task<List<Person>> GetPersons();
+        Task<bool> ValidateUniqueEmail(Person person);
     }
 }

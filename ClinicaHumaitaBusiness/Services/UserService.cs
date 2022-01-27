@@ -44,7 +44,7 @@ namespace ClinicaHumaita.Services
                 throw new Exception("Error while searching for user");
             }
         }
-        public async Task<User> Login(string username, string password)
+        public async Task<User> ValidateUser(string username, string password)
         {
             try 
             { 

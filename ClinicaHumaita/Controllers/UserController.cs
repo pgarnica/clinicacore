@@ -198,7 +198,7 @@ namespace ClinicaHumaita.Controllers
                 try
                 {
                     // Chama a classe de servico e aguarda a execucao do metodo de login
-                    var user = await _service.Login(username, password);
+                    var user = await _service.ValidateUser(username, password);
                     //se o retorno for null, o usuario nao existe na base ou informou dados incorretos
                     if (user == null)
                     {
@@ -207,7 +207,7 @@ namespace ClinicaHumaita.Controllers
                     else
                     {
 
-                        if (LoginUser(user).Result == true)
+                        if (await LoginUser(user) == true)
                         {
                             //redireciona para a pagina principal quando usuario logado
                             return RedirectToAction(nameof(Index), "Person");

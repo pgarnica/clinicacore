@@ -22,8 +22,9 @@ namespace ClinicaHumaita.Tests.Services
         [Fact]
         public async void PersonService_GetById()
         {
-            var repository = await CreateRepositoryAsync(true);
-            var personService = new PersonService(repository);
+            var personRepository = await CreatePersonRepositoryAsync(false);
+            var userRepository = await CreateUserRepositoryAsync(true);
+            var personService = new PersonService(personRepository, userRepository);
 
             //Act
             var personRetorno = await personService.GetById(1);
@@ -34,17 +35,18 @@ namespace ClinicaHumaita.Tests.Services
         }
 
         [Fact]
-        public async void PersonService_GetUsersPersons()
+        public async void PersonService_GetPersons()
         {
-            var repository = await CreateRepositoryAsync(true);
-            var personService = new PersonService(repository);
+            var personRepository = await CreatePersonRepositoryAsync(true);
+            var userRepository = await CreateUserRepositoryAsync(false);
+            var personService = new PersonService(personRepository, userRepository);
 
             //Act
-            var personRetorno = await personService.GetUsersPersons();
+            var personRetorno = await personService.GetPersons();
 
             //Assert
             Assert.NotNull(personRetorno);
-            Assert.Equal(2,personRetorno.Count);
+            Assert.Equal(3,personRetorno.Count);
         }
 
         [Fact]
@@ -58,11 +60,12 @@ namespace ClinicaHumaita.Tests.Services
                 email = "paulo.garnica@gmail.com"
             };
 
-            var repository = await CreateRepositoryAsync();
-            var personService = new PersonService(repository);
+            var personRepository = await CreatePersonRepositoryAsync(false);
+            var userRepository = await CreateUserRepositoryAsync(true);
+            var personService = new PersonService(personRepository, userRepository);
 
             //Act
-            await personService.Create(person);
+            await personService.Add(person);
 
             var personRetorno = await personService.GetById(person.id);
 
@@ -79,26 +82,25 @@ namespace ClinicaHumaita.Tests.Services
             //Arrange
             var person = new Person
             {
-                id = 3,
+                id = 1,
                 name = "Paulo Garnica",
                 email = "paulo.garnica@gmail.com"
             };
 
-            var repository = await CreateRepositoryAsync(true);
-            var personService = new PersonService(repository);
+            var personRepository = await CreatePersonRepositoryAsync(false);
+            var userRepository = await CreateUserRepositoryAsync(true);
+            var personService = new PersonService(personRepository, userRepository);
 
             //Act
-            var personOriginal = await personService.GetById(3);
+            await personService.Update(person);
 
-            await personService.Edit(person);
-
-            var personAlterada = await personService.GetById(3);
+            var personAlterada = await personService.GetById(1);
 
             //Assert
             Assert.NotNull(personAlterada);
-            Assert.Equal(personAlterada.id, personOriginal.id);
-            Assert.NotEqual(personAlterada.name, personOriginal.name);
-            Assert.NotEqual(personAlterada.email, personOriginal.email);
+            Assert.Equal(personAlterada.id, person.id);
+            Assert.Equal(personAlterada.name, person.name);
+            Assert.Equal(personAlterada.email, person.email);
         }
 
         [Fact]
@@ -107,23 +109,21 @@ namespace ClinicaHumaita.Tests.Services
             //Arrange
             var person = new Person
             {
-                id = 3,
+                id = 1,
             };
 
-            var repository = await CreateRepositoryAsync(true);
-            var personService = new PersonService(repository);
+            var personRepository = await CreatePersonRepositoryAsync(true);
+            var userRepository = await CreateUserRepositoryAsync(false);
+            var personService = new PersonService(personRepository, userRepository);
 
             //Act
-            var personAntes = await personService.GetById(3);
-            await personService.Remove(person);
-            var personRemover = await personService.GetById(3);
+            var retorno = await personService.Delete(person);
 
             //Assert
-            Assert.Null(personRemover);
-            Assert.NotNull(personAntes);
+            Assert.True(retorno);
         }
 
-        private async Task<PersonRepository> CreateRepositoryAsync(bool populated = false)
+        private async Task<PersonRepository> CreatePersonRepositoryAsync(bool populated = false)
         {
             ClinicaContext context = new ClinicaContext(_options);
 
@@ -132,6 +132,17 @@ namespace ClinicaHumaita.Tests.Services
                 await PopulateDataAsync(context);
             }
             return new PersonRepository(context);
+        }
+
+        private async Task<UserRepository> CreateUserRepositoryAsync(bool populated = false)
+        {
+            ClinicaContext context = new ClinicaContext(_options);
+
+            if (populated)
+            {
+                await PopulateDataAsync(context);
+            }
+            return new UserRepository(context);
         }
 
         private async Task PopulateDataAsync(ClinicaContext context)
@@ -154,7 +165,7 @@ namespace ClinicaHumaita.Tests.Services
                 {
                     User user = new User
                     {
-                        PersonId = person.id,
+                        PersonId = person.id.Value,
                         Active = true,
                         Creation_Date  = DateTime.Now,
                         Last_login = null,

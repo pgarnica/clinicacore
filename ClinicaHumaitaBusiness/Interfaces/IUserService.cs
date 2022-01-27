@@ -8,7 +8,7 @@ namespace ClinicaHumaita.Business.Interfaces
         Task<User> Create(User user);
         Task<User> Edit(User user);
         Task<User> Remove(User user);
-        Task<User> Login(string username, string password);
+        Task<User> ValidateUser(string username, string password);
         Task<User> GetByUserName(string username);
     }
 }

@@ -10,146 +10,84 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaHumaita.Controllers
 {
+    [Route("api/[controller]")]
     public class PersonController : Controller
     {
-        //instacia do servico de pessoas para evitar acesso diretos aos dados
-        private readonly IPersonService _service;
-        public PersonController(IPersonService service)
+        private readonly IPersonService _personService;
+        public PersonController(IPersonService personService)
         {
-            _service = service;
-        }
-
-        //carrega lista de pessoas
-        [Authorize]
-        public async Task<IActionResult> Index()
-        {
-            return View(await _service.GetUsersPersons());
-        }
-
-        //adicionar uma pessoa
-        [Authorize]
-        public IActionResult Create()
-        {
-            return View();
+            _personService = personService;
         }
 
         [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Person person)
+        [HttpGet("list-persons")]
+        public async Task<ActionResult<List<Person>>> ListPersons()
         {
             try
             {
-                if(ModelState.IsValid)
-                {   //adiciona person
-                    var result = await _service.Create(person);
-                    //redireciona para lista de persons
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    //se a modelstate nao for valida retorna erro
-                    ModelState.AddModelError("email", "Dados inválidos");
-                    return View(person);
-                }
+                return Ok(await _personService.GetPersons());
             }
-            catch
+            catch (Exception ex)
             {
-                //em caso de erro retorno uma excpetion.
-                throw new InvalidDataException();
+                return BadRequest(new { errorMessage = ex.Message });
             }
         }
 
-        //editar uma pessoa
         [Authorize]
-        public async Task<IActionResult> Edit(int? id)
-        {
-
-            if(id == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            var pessoa = await _service.GetById(int.Parse(id.ToString()));
-                
-            return View(pessoa);
-        }
-
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Person person)
+        [HttpPost("Add")]
+        public async Task<ActionResult<Person>> Add([FromBody]Person person)
         {
             try
             {
-                if (ModelState.IsValid)
-                {   //adiciona person
-                    var result = await _service.Edit(person);
-                    //redireciona para lista de persons
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    //se a modelstate nao for valida retorna erro
-                    ModelState.AddModelError("email", "Dados inválidos");
-                    return View(person);
-                }
+                return Ok(await _personService.Add(person));
             }
-            catch
+            catch (Exception ex)
             {
-                //em caso de erro retorno uma excpetion.
-                throw new InvalidDataException();
+                return BadRequest(new {errorMessage = ex.Message});
             }
         }
 
-        //remover uma pessoa
         [Authorize]
-        public async Task<IActionResult> Remove(int? id)
-        {
-
-            if (id == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            var pessoa = await _service.GetById(int.Parse(id.ToString()));
-
-            return View(pessoa);
-        }
-
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Remove(Person person)
+        [HttpPut("Update")]
+        public async Task<ActionResult<Person>> Update([FromBody] Person person)
         {
             try
             {
-                  //remove person
-                    var result = await _service.Remove(person);
-                    //redireciona para lista de persons
-                    return RedirectToAction(nameof(Index));
-               
+                return Ok(await _personService.Update(person));
             }
-            catch
+            catch (Exception ex)
             {
-                //em caso de erro retorno uma excpetion.
-                throw new InvalidDataException();
+                return BadRequest(new { errorMessage = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("Delete")]
+        public async Task<ActionResult<bool>> Delete([FromBody] Person person)
+        {
+            try
+            {
+                return Ok(await _personService.Delete(person));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new { errorMessage = ex.Message });
             }
         }
 
         //mostrar detalhes da pessoa
         [Authorize]
-        public async Task<IActionResult> Detail(int? id)
+        [HttpGet("Detail")]
+        public async Task<ActionResult<Person>> Detail([FromQuery] int? id)
         {
-
-            if (id == null)
+            try
             {
-                return RedirectToAction(nameof(Index));
+                return Ok(await _personService.GetById(id));
             }
-
-            var pessoa = await _service.GetById(int.Parse(id.ToString()));
-
-            return View(pessoa);
+            catch (Exception ex)
+            {
+                return BadRequest(new { errorMessage = ex.Message });
+            }
         }
     }
 }

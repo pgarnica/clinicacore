@@ -18,23 +18,23 @@ namespace ClinicaHumaita.Data.Repository
         {
             _db = db;
         }
-        public async Task<Person> Create(Person newItem)
+        public async Task<Person> Add(Person newPerson)
         {
             try
             {
                 //salvar no banco
-                var result = await _db.Person.AddAsync(newItem);
+                await _db.Person.AddAsync(newPerson);
                 await _db.SaveChangesAsync();
                 //retornar o objeto que foi salvo
-                return newItem;
+                return newPerson;
             }
-            catch
+            catch(Exception ex)
             {
                 // retorna uma exception em caso de falha na insercao
-                throw new InvalidDataException();
+                throw ex;
             }
         }
-        public async Task<Person> Edit(Person personView)
+        public async Task<Person> Update(Person personView)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace ClinicaHumaita.Data.Repository
                 throw ex;
             }
         }
-        public async Task<bool> Remove(Person personView)
+        public async Task<bool> Delete(Person personView)
         {
             try
             {
@@ -71,21 +71,30 @@ namespace ClinicaHumaita.Data.Repository
         public async Task<Person> GetById(int id)
         {
             //retorna person pelo id
-            return await _db.Person.Where(a => a.id == id).Select(x=> new Person
-            {
-                id = x.id,
-                name = x.name,
-                email = x.email,
-            }).FirstOrDefaultAsync();
+            return await _db.Person.Where(a => a.id.Equals(id))
+                                   .FirstOrDefaultAsync();
         }
-        public async Task<List<Person>> GetUsersPersons()
+        public async Task<bool> ValidateUniqueEmail(Person person)
         {
-            //retorna lista sem as pessoas que sao usuarios
-            var users = await _db.Users.Select(e => e.Person).ToListAsync();
-            var persons = _db.Person.ToListAsync().Result.Except(users).ToList();
+            return await _db.Person.AnyAsync(a => (!person.id.HasValue || !a.id.Equals(person.id.Value))
+                                               && a.email.Equals(person.email));
+        }
+        public async Task<List<Person>> GetPersons()
+        {
+            try
+            {
+                return await _db.Person.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+        }
 
-            //retorna uma lista de person
-            return persons;
+        public void Dispose()
+        {
+            _db?.Dispose();
         }
     }
 }

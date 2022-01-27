@@ -7,7 +7,7 @@ namespace ClinicaHumaita.Data.Models
     public class Person
     {
         [Key]
-        public int id { get; set; }
+        public int? id { get; set; }
         [Display(Name = "Nome completo")]
         [Required(ErrorMessage = "Favor preencher o campo Nome Completo.")]
         public string name { get; set; }

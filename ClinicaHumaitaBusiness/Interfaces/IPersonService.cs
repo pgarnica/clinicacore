@@ -6,10 +6,10 @@ namespace ClinicaHumaita.Business.Interfaces
 {
     public interface IPersonService
     {
-        Task<Person> Create(Person newItem);
-        Task<Person> Edit(Person person);
-        Task<bool> Remove(Person person);
-        Task<Person> GetById(int id);
-        Task<List<Person>> GetUsersPersons();
+        Task<Person> Add(Person newPerson);
+        Task<Person> Update(Person person);
+        Task<bool> Delete(Person person);
+        Task<Person> GetById(int? id);
+        Task<List<Person>> GetPersons();
     }
 }

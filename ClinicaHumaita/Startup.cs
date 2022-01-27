@@ -1,17 +1,19 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using ClinicaHumaita.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using ClinicaHumaita.Data.Context;
 using ClinicaHumaita.Business.Interfaces;
 using ClinicaHumaita.Data.Interfaces;
 using ClinicaHumaita.Data.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using ClinicaHumaita.Business.Configuration;
+using System.Text;
 
 namespace ClinicaHumaita
 {
@@ -46,16 +48,28 @@ namespace ClinicaHumaita
             //Ligação entre a internface e a classe implementadora.
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-
-            //Referencia ao autenticador, redirecionando pro login 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                   .AddCookie(options =>
-                   {
-                       options.LoginPath = "/Login/";
-                   });
+            var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
         }
 

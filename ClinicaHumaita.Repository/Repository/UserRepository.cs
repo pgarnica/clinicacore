@@ -27,7 +27,7 @@ namespace ClinicaHumaita.Data.Repository
                 user.Active = true;
                 user.Creation_Date = DateTime.Now;
                 //criptografar a senha
-                user.Password = MD5Hash(user.Password);
+                user.Password = user.Password;
                 //salvar no banco
                 await _db.Users.AddAsync(user);
                 await _db.SaveChangesAsync();
@@ -91,26 +91,7 @@ namespace ClinicaHumaita.Data.Repository
                 throw new InvalidDataException();
             }
         }
-        public string MD5Hash(string text)
-        {
-            MD5 md5 = new MD5CryptoServiceProvider();
-
-            //compute hash from the bytes of text  
-            md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
-
-            //get hash result after compute it  
-            byte[] result = md5.Hash;
-
-            StringBuilder strBuilder = new StringBuilder();
-            for (int i = 0; i < result.Length; i++)
-            {
-                //change it into 2 hexadecimal digits  
-                //for each byte  
-                strBuilder.Append(result[i].ToString("x2"));
-            }
-
-            return strBuilder.ToString();
-        }
+      
         public async Task<User> Remove(User user)
         {
             try
@@ -132,6 +113,16 @@ namespace ClinicaHumaita.Data.Repository
                 //retorna uma exception em caso de falha
                 throw ex;
             }
+        }
+
+        public async Task<bool> PersonIsUser(int personId)
+        {
+            return  await _db.Users.AnyAsync(x => x.Person.id.Equals(personId));
+        }
+
+        public void Dispose()
+        {
+            _db?.Dispose();
         }
     }
 }

@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ClinicaHumaita.Repository\ClinicaHumaita.Data.csproj" />
     <ProjectReference Include="..\ClinicaHumaita.Shared\ClinicaHumaita.Shared.csproj" />
   </ItemGroup>

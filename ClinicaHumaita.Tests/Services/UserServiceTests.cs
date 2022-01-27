@@ -32,7 +32,7 @@ namespace ClinicaHumaita.Tests.Services
             User user = new User
             {
                 Person = person,
-                PersonId = person.id,
+                PersonId = person.id.Value,
                 Active = true,
                 Creation_Date = DateTime.Now,
                 Last_login = null,
@@ -69,7 +69,7 @@ namespace ClinicaHumaita.Tests.Services
             User user = new User
             {
                 Person = person,
-                PersonId = person.id,
+                PersonId = person.id.Value,
                 Active = true,
                 Creation_Date = DateTime.Now,
                 Last_login = null,
@@ -104,7 +104,7 @@ namespace ClinicaHumaita.Tests.Services
             User user = new User
             {
                 Person = person,
-                PersonId = person.id,
+                PersonId = person.id.Value,
                 Active = true,
                 Creation_Date = DateTime.Now,
                 Last_login = null,
@@ -117,7 +117,7 @@ namespace ClinicaHumaita.Tests.Services
             await userService.Create(user);
 
             //Act
-            var userLogado = await userService.Login(user.UserName, user.Person.name);
+            var userLogado = await userService.ValidateUser(user.UserName, user.Person.name);
 
             //Assert
             Assert.NotNull(userLogado);
@@ -139,7 +139,7 @@ namespace ClinicaHumaita.Tests.Services
             User user = new User
             {
                 Person = person,
-                PersonId = person.id,
+                PersonId = person.id.Value,
                 Active = true,
                 Creation_Date = DateTime.Now,
                 Last_login = null,
@@ -179,7 +179,7 @@ namespace ClinicaHumaita.Tests.Services
             User user = new User
             {
                 Person = person,
-                PersonId = person.id,
+                PersonId = person.id.Value,
                 Active = true,
                 Creation_Date = DateTime.Now,
                 Last_login = null,
@@ -231,7 +231,7 @@ namespace ClinicaHumaita.Tests.Services
                 {
                     User user = new User
                     {
-                        PersonId = person.id,
+                        PersonId = person.id.Value,
                         Active = true,
                         Creation_Date  = DateTime.Now,
                         Last_login = null,
