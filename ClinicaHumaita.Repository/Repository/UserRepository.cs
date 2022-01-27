@@ -66,8 +66,7 @@ namespace ClinicaHumaita.Data.Repository
                 var entryUser = _db.Users.FirstOrDefault(e => e.Id == user.Id);
   
                 entryUser.UserName = user.UserName;
-                entryUser.Person.name = user.Person.name;
-                entryUser.Person.email = user.Person.email;
+                entryUser.Active = user.Active;
                 _db.Entry(entryUser).State = EntityState.Modified;
 
                 await _db.SaveChangesAsync();

@@ -37,9 +37,10 @@ namespace ClinicaHumaita.Services
                     Password = MD5Hash(userAdd.Password),
                     PersonId = person.id.Value,
                     UserName = userAdd.Username,
+                    Active = true,
+                    Creation_Date = DateTime.UtcNow,
                 };
 
-                //retornar o objeto que foi salvo
                 var createdUser =  await _userRepository.Add(user);
                 createdUser.Password = "";
                 return createdUser;
@@ -47,7 +48,6 @@ namespace ClinicaHumaita.Services
             }
             catch(Exception ex) 
             {
-                // retorna uma exception em caso de falha na insercao
                 throw ex;
             }
         }
@@ -55,12 +55,10 @@ namespace ClinicaHumaita.Services
         {
             try
             {
-                //retornar o user pelo userName
                 return await _userRepository.GetByUserName(username);
             }
             catch (Exception ex)
             {
-                // retorna uma exception em caso de falha na insercao
                 throw ex;
             }
         }
@@ -68,13 +66,10 @@ namespace ClinicaHumaita.Services
         {
             try 
             { 
-                //retorn o usuario em caso de login com sucesso
                 return await _userRepository.Login(username, MD5Hash(password));
-
             }
             catch (Exception ex)
             {
-                // retorna uma exception em caso de falha na insercao
                 throw ex;
             }
         }
@@ -100,7 +95,7 @@ namespace ClinicaHumaita.Services
                     Email = userUpdate.Email 
                 });
 
-                user.UserName = userUpdate.Name;
+                user.UserName = userUpdate.Username;
                 user.Active = userUpdate.Active;
 
                 var updatedUser = await _userRepository.Update(user);
@@ -109,7 +104,6 @@ namespace ClinicaHumaita.Services
             }
             catch (Exception ex)
             {
-                // retorna uma exception em caso de falha na insercao
                 throw ex;
             }
         }
@@ -135,25 +129,17 @@ namespace ClinicaHumaita.Services
             }
             catch (Exception ex)
             {
-                // retorna uma exception em caso de falha na insercao
                 throw ex;
             }
         }
         private string MD5Hash(string text)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
-
-            //compute hash from the bytes of text  
             md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
-
-            //get hash result after compute it  
             byte[] result = md5.Hash;
-
             StringBuilder strBuilder = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
             {
-                //change it into 2 hexadecimal digits  
-                //for each byte  
                 strBuilder.Append(result[i].ToString("x2"));
             }
 

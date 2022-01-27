@@ -1,7 +1,9 @@
-﻿using ClinicaHumaita.Data.Context;
+﻿using ClinicaHumaita.Business.Interfaces;
+using ClinicaHumaita.Data.Context;
 using ClinicaHumaita.Data.Models;
 using ClinicaHumaita.Data.Repository;
 using ClinicaHumaita.Services;
+using ClinicaHumaita.Shared.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -12,46 +14,38 @@ namespace ClinicaHumaita.Tests.Services
     public class UserServiceTests
     {
         private DbContextOptions<ClinicaContext> _options;
-
+         
         public UserServiceTests()
         {
             _options = new DbContextOptionsBuilder<ClinicaContext>().UseInMemoryDatabase(databaseName: "TestNewListDb").Options;
+            
         }
 
         [Fact]
-        public async void PersonService_Create()
+        public async void PersonService_Add()
         {
             //Arrange
-            var person = new Person
+            var user = new UserAddViewModel
             {
-                id = 10,
-                name = "Paulo Garnica",
-                email = "paulo.garnica@gmail.com"
+                Password = "teste123",
+                Username = "garnica",
+                Name = "Paulo Garnica",
+                Email = "paulo.garnica@gmail.com"
             };
 
-            User user = new User
-            {
-                Person = person,
-                PersonId = person.id.Value,
-                Active = true,
-                Creation_Date = DateTime.Now,
-                Last_login = null,
-                Password = person.name,
-                UserName = person.email
-            };
-
-            var repository = await CreateRepositoryAsync();
-            var userService = new UserService(repository);
+            var repository = await CreateRepositoryAsync(false);
+            var personRepository = await CreatePersonRepositoryAsync(false);
+            var personService = new PersonService(personRepository, repository);
+            var userService = new UserService(repository, personService);
 
             //Act
-            await userService.Create(user);
+            await userService.Add(user);
 
-            var userRetorno = await userService.GetByUserName(user.UserName);
+            var userRetorno = await userService.GetByUserName(user.Username);
 
             //Assert
             Assert.NotNull(userRetorno);
-            Assert.Equal(user.Id, userRetorno.Id);
-            Assert.Equal(user.UserName, userRetorno.UserName);
+            Assert.Equal(user.Username, userRetorno.UserName);
            
         }
 
@@ -59,106 +53,87 @@ namespace ClinicaHumaita.Tests.Services
         public async void PersonService_GetByUserName()
         {
             //Arrange
-            var person = new Person
+            var user = new UserAddViewModel
             {
-                id = 10,
-                name = "Paulo Garnica",
-                email = "paulo.garnica@gmail.com"
-            };
-
-            User user = new User
-            {
-                Person = person,
-                PersonId = person.id.Value,
-                Active = true,
-                Creation_Date = DateTime.Now,
-                Last_login = null,
-                Password = person.name,
-                UserName = person.email
+                Password = "teste123",
+                Username = "garnica",
+                Name = "Paulo Garnica",
+                Email = "paulo.garnica@gmail.com"
             };
 
             var repository = await CreateRepositoryAsync();
-            var userService = new UserService(repository);
-            await userService.Create(user);
+            var personRepository = await CreatePersonRepositoryAsync();
+            var personService = new PersonService(personRepository, repository);
+            var userService = new UserService(repository, personService);
+            await userService.Add(user);
 
             //Act
-            var userRetorno = await userService.GetByUserName(user.UserName);
+            var userRetorno = await userService.GetByUserName(user.Username);
 
             //Assert
             Assert.NotNull(userRetorno);
-            Assert.Equal(user.UserName, userRetorno.UserName);
+            Assert.Equal(user.Username, userRetorno.UserName);
 
         }
 
         [Fact]
-        public async void PersonService_Login()
+        public async void PersonService_ValidateUser()
         {
             //Arrange
-            var person = new Person
+            var user = new UserAddViewModel
             {
-                id = 10,
-                name = "Paulo Garnica",
-                email = "paulo.garnica@gmail.com"
-            };
-
-            User user = new User
-            {
-                Person = person,
-                PersonId = person.id.Value,
-                Active = true,
-                Creation_Date = DateTime.Now,
-                Last_login = null,
-                Password = person.name,
-                UserName = person.email
+                Password = "teste123",
+                Username = "garnica",
+                Name = "Paulo Garnica",
+                Email = "paulo.garnica@gmail.com"
             };
 
             var repository = await CreateRepositoryAsync();
-            var userService = new UserService(repository);
-            await userService.Create(user);
+            var personRepository = await CreatePersonRepositoryAsync();
+            var personService = new PersonService(personRepository, repository);
+            var userService = new UserService(repository, personService);
+            await userService.Add(user);
 
             //Act
-            var userLogado = await userService.ValidateUser(user.UserName, user.Person.name);
+            var userLogado = await userService.ValidateUser(user.Username, user.Password);
 
             //Assert
             Assert.NotNull(userLogado);
-            Assert.Equal(user.UserName, userLogado.UserName);
+            Assert.Equal(user.Username, userLogado.UserName);
 
         }
 
         [Fact]
-        public async void PersonService_Edit()
+        public async void PersonService_Update()
         {
             //Arrange
-            var person = new Person
+            var user = new UserAddViewModel
             {
-                id = 10,
-                name = "Paulo Garnica",
-                email = "paulo.garnica@gmail.com"
-            };
-
-            User user = new User
-            {
-                Person = person,
-                PersonId = person.id.Value,
-                Active = true,
-                Creation_Date = DateTime.Now,
-                Last_login = null,
-                Password = person.name,
-                UserName = person.email
+                Password = "teste123",
+                Username = "garnica",
+                Name = "Paulo Garnica",
+                Email = "paulo.garnica@gmail.com"
             };
 
             var repository = await CreateRepositoryAsync();
-            var userService = new UserService(repository);
-            await userService.Create(user);
-            var userAntes = await userService.GetByUserName(user.UserName);
+            var personRepository = await CreatePersonRepositoryAsync();
+            var personService = new PersonService(personRepository, repository);
+            var userService = new UserService(repository, personService);
+            await userService.Add(user);
+            var userAntes = await userService.GetByUserName(user.Username);
 
-            user.UserName = "garnica_username";
-
-            
+            var userUpdate = new UserUpdateViewModel
+            {
+                Id = 1,
+                Username = "garnica",
+                Name = "Paulo Garnica",
+                Email = "paulo.garnica@gmail.com",
+                Active = true 
+            };
 
             //Act
-            var userLogado = await userService.Edit(user);
-            var userDepois = await userService.GetByUserName(user.UserName);
+            var userLogado = await userService.Update(userUpdate);
+            var userDepois = await userService.GetByUserName(user.Username);
 
             //Assert
             Assert.NotNull(userLogado);
@@ -169,31 +144,23 @@ namespace ClinicaHumaita.Tests.Services
         public async void PersonService_Remove()
         {
             //Arrange
-            var person = new Person
+            var user = new UserAddViewModel
             {
-                id = 10,
-                name = "Paulo Garnica",
-                email = "paulo.garnica@gmail.com"
-            };
-
-            User user = new User
-            {
-                Person = person,
-                PersonId = person.id.Value,
-                Active = true,
-                Creation_Date = DateTime.Now,
-                Last_login = null,
-                Password = person.name,
-                UserName = person.email
+                Password = "teste123",
+                Username = "garnica",
+                Name = "Paulo Garnica",
+                Email = "paulo.garnica@gmail.com"
             };
 
             var repository = await CreateRepositoryAsync();
-            var userService = new UserService(repository);
-            await userService.Create(user);
+            var personRepository = await CreatePersonRepositoryAsync();
+            var personService = new PersonService(personRepository, repository);
+            var userService = new UserService(repository, personService);
+            await userService.Add(user);
 
             //Act
-            var userLogado = await userService.Remove(user);
-            var userDepois = await userService.GetByUserName(user.UserName);
+            var userLogado = await userService.Delete(new UserDeleteViewModel { Id = 1});
+            var userDepois = await userService.GetByUserName(user.Username);
 
             //Assert
             Assert.NotNull(userLogado);
@@ -209,6 +176,17 @@ namespace ClinicaHumaita.Tests.Services
                 await PopulateDataAsync(context);
             }
             return new UserRepository(context);
+        }
+
+        private async Task<PersonRepository> CreatePersonRepositoryAsync(bool populated = false)
+        {
+            ClinicaContext context = new ClinicaContext(_options);
+
+            if (populated)
+            {
+                await PopulateDataAsync(context);
+            }
+            return new PersonRepository(context);
         }
 
         private async Task PopulateDataAsync(ClinicaContext context)
