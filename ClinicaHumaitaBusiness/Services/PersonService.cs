@@ -20,10 +20,15 @@ namespace ClinicaHumaita.Services
             _personRepository = personRepository;
             _userRepository = userRepository;
         }
-        public async Task<Person> Add(Person newPerson)
+        public async Task<Person> Add(PersonAddViewModel personAdd)
         {
             try
             {
+                var newPerson = new Person
+                {
+                    email = personAdd.Email,
+                    name = personAdd.Name,
+                };
                 var personValidation = await ValidPerson(newPerson);
                 if(!personValidation.Valid)
                 {
@@ -38,29 +43,29 @@ namespace ClinicaHumaita.Services
                 throw ex;
             }
         }
-        public async Task<Person> Update(Person person)
+        public async Task<Person> Update(PersonUpdateViewModel personUpdate)
         {
             try
             {
-                if (!person.id.HasValue)
+                if (!personUpdate.Id.HasValue)
                 {
                     throw new Exception("The id field is required.");
                 }
 
-                var personEdit = await _personRepository.GetById(person.id.Value);
+                var personEdit = await _personRepository.GetById(personUpdate.Id.Value);
                 if (personEdit == null)
                 {
                     throw new Exception("Person not found.");
                 }
 
-                var personValidation = await ValidPerson(person);
+                personEdit.name = personUpdate.Name;
+                personEdit.email = personUpdate.Email;
+
+                var personValidation = await ValidPerson(personEdit);
                 if (!personValidation.Valid)
                 {
                     throw new Exception(personValidation.Message);
                 }
-
-                personEdit.name = person.name;
-                personEdit.email = person.email;
 
                 return await _personRepository.Update(personEdit);
             }
@@ -69,16 +74,16 @@ namespace ClinicaHumaita.Services
                 throw ex;
             }
         }
-        public async Task<bool> Delete(Person person)
+        public async Task<bool> Delete(PersonDeleteViewModel personDelete)
         {
             try
             {
-                if (!person.id.HasValue)
+                if (!personDelete.Id.HasValue)
                 {
                     throw new Exception("The id field is required.");
                 }
 
-                var personRemove = await _personRepository.GetById(person.id.Value);
+                var personRemove = await _personRepository.GetById(personDelete.Id.Value);
                 if (personRemove == null)
                 {
                     throw new Exception("Person not found.");
@@ -158,7 +163,6 @@ namespace ClinicaHumaita.Services
             
             return validation;
         }
-
         public void Dispose()
         {
             _personRepository?.Dispose();

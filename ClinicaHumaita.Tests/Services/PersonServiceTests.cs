@@ -2,6 +2,7 @@
 using ClinicaHumaita.Data.Models;
 using ClinicaHumaita.Data.Repository;
 using ClinicaHumaita.Services;
+using ClinicaHumaita.Shared.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -53,11 +54,10 @@ namespace ClinicaHumaita.Tests.Services
         public async void PersonService_Create()
         {
             //Arrange
-            var person = new Person
+            var person = new PersonAddViewModel
             {
-                id = 10,
-                name = "Paulo Garnica",
-                email = "paulo.garnica@gmail.com"
+                Name = "Paulo Garnica",
+                Email = "paulo.garnica@gmail.com"
             };
 
             var personRepository = await CreatePersonRepositoryAsync(false);
@@ -65,26 +65,23 @@ namespace ClinicaHumaita.Tests.Services
             var personService = new PersonService(personRepository, userRepository);
 
             //Act
-            await personService.Add(person);
-
-            var personRetorno = await personService.GetById(person.id);
+            var personRetorno = await personService.Add(person);
 
             //Assert
             Assert.NotNull(personRetorno);
-            Assert.Equal(person.id, personRetorno.id);
-            Assert.Equal(person.name, personRetorno.name);
-            Assert.Equal(person.email, personRetorno.email);
+            Assert.Equal(person.Name, personRetorno.name);
+            Assert.Equal(person.Email, personRetorno.email);
         }
 
         [Fact]
         public async void PersonService_Edit()
         {
             //Arrange
-            var person = new Person
+            var person = new PersonUpdateViewModel
             {
-                id = 1,
-                name = "Paulo Garnica",
-                email = "paulo.garnica@gmail.com"
+                Id = 1,
+                Name = "Paulo Garnica",
+                Email = "paulo.garnica@gmail.com"
             };
 
             var personRepository = await CreatePersonRepositoryAsync(false);
@@ -98,18 +95,18 @@ namespace ClinicaHumaita.Tests.Services
 
             //Assert
             Assert.NotNull(personAlterada);
-            Assert.Equal(personAlterada.id, person.id);
-            Assert.Equal(personAlterada.name, person.name);
-            Assert.Equal(personAlterada.email, person.email);
+            Assert.Equal(personAlterada.id, person.Id);
+            Assert.Equal(personAlterada.name, person.Name);
+            Assert.Equal(personAlterada.email, person.Email);
         }
 
         [Fact]
         public async void PersonService_Remove()
         {
             //Arrange
-            var person = new Person
+            var person = new PersonDeleteViewModel
             {
-                id = 1,
+                Id = 1,
             };
 
             var personRepository = await CreatePersonRepositoryAsync(true);

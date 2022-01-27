@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using ClinicaHumaita.Business.Interfaces;
-using ClinicaHumaita.Data.Models;
+using ClinicaHumaita.Shared.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +18,7 @@ namespace ClinicaHumaita.Controllers
 
         [Authorize]
         [HttpGet("list-persons")]
-        public async Task<ActionResult<List<Person>>> ListPersons()
+        public async Task<ActionResult> ListPersons()
         {
             try
             {
@@ -35,11 +32,11 @@ namespace ClinicaHumaita.Controllers
 
         [Authorize]
         [HttpPost("Add")]
-        public async Task<ActionResult<Person>> Add([FromBody]Person person)
+        public async Task<ActionResult> Add([FromBody]PersonAddViewModel personAdd)
         {
             try
             {
-                return Ok(await _personService.Add(person));
+                return Ok(await _personService.Add(personAdd));
             }
             catch (Exception ex)
             {
@@ -49,11 +46,11 @@ namespace ClinicaHumaita.Controllers
 
         [Authorize]
         [HttpPut("Update")]
-        public async Task<ActionResult<Person>> Update([FromBody] Person person)
+        public async Task<ActionResult> Update([FromBody]PersonUpdateViewModel personUpdate)
         {
             try
             {
-                return Ok(await _personService.Update(person));
+                return Ok(await _personService.Update(personUpdate));
             }
             catch (Exception ex)
             {
@@ -63,11 +60,11 @@ namespace ClinicaHumaita.Controllers
 
         [Authorize]
         [HttpDelete("Delete")]
-        public async Task<ActionResult<bool>> Delete([FromBody] Person person)
+        public async Task<ActionResult> Delete([FromBody] PersonDeleteViewModel personDelete)
         {
             try
             {
-                return Ok(await _personService.Delete(person));
+                return Ok(await _personService.Delete(personDelete));
             }
             catch(Exception ex)
             {
@@ -78,7 +75,7 @@ namespace ClinicaHumaita.Controllers
         //mostrar detalhes da pessoa
         [Authorize]
         [HttpGet("Detail")]
-        public async Task<ActionResult<Person>> Detail([FromQuery] int? id)
+        public async Task<ActionResult> Detail([FromQuery] int? id)
         {
             try
             {
