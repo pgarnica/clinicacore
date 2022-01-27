@@ -19,10 +19,10 @@ namespace ClinicaHumaita.Services
             _userService = userService;
         }
 
-        public async Task<UserTokenViewModel> Authenticate(User user)
+        public async Task<UserTokenViewModel> Authenticate(LoginViewModel login)
         {
             // Recupera o usuário
-            var validUser = await _userService.ValidateUser(user.UserName, user.Password);
+            var validUser = await _userService.ValidateUser(login.UserName, login.Password);
 
             // Verifica se o usuário existe
             if (validUser == null) 
@@ -52,7 +52,7 @@ namespace ClinicaHumaita.Services
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.Email, user.Person.email)
                 }),
-                Expires = DateTime.UtcNow.AddHours(2),
+                Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

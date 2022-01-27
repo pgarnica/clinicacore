@@ -18,11 +18,11 @@ namespace ClinicaHumaita.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserTokenViewModel>> Login([FromBody] User user)
+        public async Task<ActionResult<UserTokenViewModel>> Login([FromBody] LoginViewModel login)
         {
             try 
             { 
-                return Ok(await _authenticationService.Authenticate(user));
+                return Ok(await _authenticationService.Authenticate(login));
             }
             catch (Exception ex)
             {

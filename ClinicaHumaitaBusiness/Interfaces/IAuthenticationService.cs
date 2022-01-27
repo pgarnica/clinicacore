@@ -6,6 +6,6 @@ namespace ClinicaHumaita.Business.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<UserTokenViewModel> Authenticate(User user);
+        Task<UserTokenViewModel> Authenticate(LoginViewModel login);
     }
 }
