@@ -12,13 +12,9 @@ namespace ClinicaHumaita.Data.Models
 
         public int PersonId { get; set; }
 
-        [Display(Name ="Usuário")]
-        [Required(ErrorMessage = "Favor preencher o campo Usuário.")]
         public string UserName { get; set; }
 
-        [Display(Name = "Senha")]
         [DataType(DataType.Password)]
-        [Required(ErrorMessage = "Favor preencher o campo Senha.")]
         public string Password { get; set; }
 
         public DateTime Creation_Date { get; set; }

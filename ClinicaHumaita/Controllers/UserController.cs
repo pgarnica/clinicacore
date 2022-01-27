@@ -5,29 +5,30 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ClinicaHumaita.Business.Interfaces;
 using ClinicaHumaita.Data.Models;
+using ClinicaHumaita.Shared.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaHumaita.Controllers
 {
+    [Route("api/[controller]")]
     public class UserController : Controller
     {
         //instancia o servico de usuario para ser utilizado pela controller e evitar acesso direto aos dados.
-        private readonly IUserService _service;
-        public UserController(IUserService service)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            _service = service;
+            _userService = userService;
         }
 
-        //alterada a route para nao exibir o /user/ e validando o token
-        [HttpPost]
-        [Route("/Cadastro")]
-        public async Task<ActionResult<User>> Create(User user)
+        [Authorize]
+        [HttpPost("Add")]
+        public async Task<ActionResult> Add([FromBody]UserAddViewModel userAdd)
         {
             try
             {
-                return Ok(await _service.Create(user));
+                return Ok(await _userService.Add(userAdd));
             }
             catch (Exception ex)
             {
@@ -37,12 +38,12 @@ namespace ClinicaHumaita.Controllers
 
         //Editar Usuario
         [Authorize]
-        [HttpPost]
-        public async Task<ActionResult<User>> Edit(User user)
+        [HttpPut("Update")]
+        public async Task<ActionResult> Update([FromBody]UserUpdateViewModel userUpdate)
         {
             try
             {
-                return Ok(await _service.Edit(user));
+                return Ok(await _userService.Update(userUpdate));
             }
             catch (Exception ex)
             {
@@ -52,12 +53,12 @@ namespace ClinicaHumaita.Controllers
 
         //Editar Usuario
         [Authorize]
-        [HttpPost]
-        public async Task<ActionResult> Remove(User user)
+        [HttpDelete("Delete")]
+        public async Task<ActionResult> Delete([FromBody]UserDeleteViewModel user)
         {
             try
             {
-                return Ok(await _service.Remove(user));
+                return Ok(await _userService.Delete(user));
             }
             catch (Exception ex)
             {

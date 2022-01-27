@@ -1,6 +1,7 @@
 ﻿using ClinicaHumaita.Business.Interfaces;
 using ClinicaHumaita.Data.Interfaces;
 using ClinicaHumaita.Data.Models;
+using ClinicaHumaita.Shared.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
@@ -14,16 +15,35 @@ namespace ClinicaHumaita.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IPersonService _personService;
+        public UserService(IUserRepository userRepository,
+                           IPersonService personService)
         {
             _userRepository = userRepository;
+            _personService = personService;
         }
-        public async Task<User> Create(User user)
+        public async Task<User> Add(UserAddViewModel userAdd)
         {
             try
             {
+                if (await _userRepository.CheckExistingUserName(userAdd.Username, null))
+                {
+                    throw new Exception("The given username is already in use.");
+                }
+
+                var person = await _personService.Add(new PersonAddViewModel { Name = userAdd.Name, Email = userAdd.Email });
+                var user = new User
+                {
+                    Password = MD5Hash(userAdd.Password),
+                    PersonId = person.id.Value,
+                    UserName = userAdd.Username,
+                };
+
                 //retornar o objeto que foi salvo
-                return await _userRepository.Create(user);
+                var createdUser =  await _userRepository.Add(user);
+                createdUser.Password = "";
+                return createdUser;
+
             }
             catch(Exception ex) 
             {
@@ -38,10 +58,10 @@ namespace ClinicaHumaita.Services
                 //retornar o user pelo userName
                 return await _userRepository.GetByUserName(username);
             }
-            catch
+            catch (Exception ex)
             {
-                // retorna uma exception em caso de falha na busca
-                throw new Exception("Error while searching for user");
+                // retorna uma exception em caso de falha na insercao
+                throw ex;
             }
         }
         public async Task<User> ValidateUser(string username, string password)
@@ -51,23 +71,72 @@ namespace ClinicaHumaita.Services
                 //retorn o usuario em caso de login com sucesso
                 return await _userRepository.Login(username, MD5Hash(password));
 
-            }catch
+            }
+            catch (Exception ex)
             {
-                throw new InvalidDataException();
+                // retorna uma exception em caso de falha na insercao
+                throw ex;
             }
         }
-        public async Task<User> Edit(User user)
+        public async Task<User> Update(UserUpdateViewModel userUpdate)
         {
             try
             {
-                //criptografar o password antes de enviar para o repository
-                user.Password = MD5Hash(user.Password);
-                return await _userRepository.Edit(user);
+                if (!userUpdate.Id.HasValue)
+                {
+                    throw new Exception("The id field is required.");
+                }
+
+                if (await _userRepository.CheckExistingUserName(userUpdate.Username, userUpdate.Id))
+                {
+                    throw new Exception("The given username is already in use.");
+                }
+
+                var user = await _userRepository.GetById(userUpdate.Id.Value);
+                var person = await _personService.Update(new PersonUpdateViewModel 
+                { 
+                    Id = user.Person.id, 
+                    Name = userUpdate.Name, 
+                    Email = userUpdate.Email 
+                });
+
+                user.UserName = userUpdate.Name;
+                user.Active = userUpdate.Active;
+
+                var updatedUser = await _userRepository.Update(user);
+                updatedUser.Password = "";
+                return updatedUser;
             }
-            catch
+            catch (Exception ex)
             {
-                //retorna uma exception em caso de falha
-                throw new InvalidDataException();
+                // retorna uma exception em caso de falha na insercao
+                throw ex;
+            }
+        }
+        public async Task<User> Delete(UserDeleteViewModel userDelete)
+        {
+            try
+            {
+                if (!userDelete.Id.HasValue)
+                {
+                    throw new Exception("The id field is required.");
+                }
+
+                var user = await _userRepository.GetById(userDelete.Id.Value);
+                if (user == null)
+                {
+                    throw new Exception("User not found.");
+                }
+
+                var deletedUser = await _userRepository.Delete(new User { Id = userDelete.Id.Value });
+                deletedUser.Password = "";
+
+                return deletedUser;
+            }
+            catch (Exception ex)
+            {
+                // retorna uma exception em caso de falha na insercao
+                throw ex;
             }
         }
         private string MD5Hash(string text)
@@ -89,18 +158,6 @@ namespace ClinicaHumaita.Services
             }
 
             return strBuilder.ToString();
-        }
-        public async Task<User> Remove(User user)
-        {
-            try
-            {
-                return await _userRepository.Remove(user);
-            }
-            catch
-            {
-                //retorna uma exception em caso de falha
-                throw new InvalidOperationException();
-            }
         }
     }
 }
