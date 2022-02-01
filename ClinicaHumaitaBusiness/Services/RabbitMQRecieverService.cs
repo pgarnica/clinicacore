@@ -43,7 +43,8 @@ namespace ClinicaHumaita.Services
             {
                 HostName = _hostname,
                 UserName = _username,
-                Password = _password
+                Password = _password,
+                Port = 5672
             };
 
             _connection = factory.CreateConnection();

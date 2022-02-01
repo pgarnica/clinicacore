@@ -131,7 +131,6 @@ namespace ClinicaHumaita
             app.UseAuthentication();
             app.UseAuthorization();
 
-            clinicaContext.Database.EnsureCreated();
             clinicaContext.Database.Migrate();
 
             app.UseEndpoints(endpoints =>

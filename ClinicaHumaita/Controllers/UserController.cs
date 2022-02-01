@@ -22,7 +22,6 @@ namespace ClinicaHumaita.Controllers
             _userService = userService;
         }
 
-        [Authorize]
         [HttpPost("Add")]
         public async Task<ActionResult> Add([FromBody]UserAddViewModel userAdd)
         {
