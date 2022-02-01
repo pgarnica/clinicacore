@@ -11,5 +11,6 @@ namespace ClinicaHumaita.Data.Context
         }
         public DbSet<Person> Person { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Log> Logs { get; set; }
     }
 }
