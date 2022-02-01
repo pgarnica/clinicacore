@@ -12,13 +12,16 @@ namespace ClinicaHumaita.Services
 {
     public class PersonService : IPersonService
     {
-        public readonly IPersonRepository _personRepository;
-        public readonly IUserRepository _userRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IRabbitMQService _rabbitMQService;
         public PersonService(IPersonRepository personRepository,
-                             IUserRepository userRepository)
+                             IUserRepository userRepository,
+                             IRabbitMQService rabbitMQService)
         {
             _personRepository = personRepository;
             _userRepository = userRepository;
+            _rabbitMQService = rabbitMQService;
         }
         public async Task<Person> Add(PersonAddViewModel personAdd)
         {
@@ -35,8 +38,15 @@ namespace ClinicaHumaita.Services
                     throw new Exception(personValidation.Message);
                 }
 
+                var person = await _personRepository.Add(newPerson);
+
+                if(person != null)
+                {
+                   await _rabbitMQService.Send(String.Format("Adicionada Pessoa {0}", person.name));
+                }
+
                 //retornar o objeto que foi salvo
-                return await _personRepository.Add(newPerson);
+                return person;
             }
             catch(Exception ex)
             {

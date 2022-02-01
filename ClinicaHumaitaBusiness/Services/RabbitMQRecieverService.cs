@@ -1,0 +1,115 @@
+﻿using ClinicaHumaita.Business.Interfaces;
+using ClinicaHumaita.Data.Interfaces;
+using ClinicaHumaita.Shared.ViewModels;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
+using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ClinicaHumaita.Services
+{
+    public class RabbitMQRecieverService : BackgroundService, IRabbitMQRecieverService
+    {
+        private readonly IConfiguration _configuration;
+        private readonly string _hostname;
+        private readonly string _password;
+        private readonly string _queueName;
+        private readonly string _username;
+        private IConnection _connection;
+        private IModel _channel;
+        public IServiceScopeFactory _serviceScopeFactory;
+
+        public RabbitMQRecieverService( IConfiguration configuration, IServiceScopeFactory serviceScopeFactory)
+        {
+            _configuration = configuration;
+            _hostname = _configuration["RabbitMQSettings:hostName"];
+            _password = _configuration["RabbitMQSettings:password"];
+            _queueName = "log";
+            _username = _configuration["RabbitMQSettings:userName"];
+            _serviceScopeFactory = serviceScopeFactory;
+            InitializeRabbitMqListener();
+        }
+
+        private void InitializeRabbitMqListener()
+        {
+            var factory = new ConnectionFactory
+            {
+                HostName = _hostname,
+                UserName = _username,
+                Password = _password
+            };
+
+            _connection = factory.CreateConnection();
+            _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
+            _channel = _connection.CreateModel();
+            _channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+        }
+
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            stoppingToken.ThrowIfCancellationRequested();
+
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += async (ch, ea) =>
+            {
+                var content = Encoding.UTF8.GetString(ea.Body.ToArray());
+                var updateCustomerFullNameModel = JsonConvert.DeserializeObject<string>(content);
+
+                await HandleMessage(updateCustomerFullNameModel);
+
+                _channel.BasicAck(ea.DeliveryTag, false);
+            };
+            consumer.Shutdown += OnConsumerShutdown;
+            consumer.Registered += OnConsumerRegistered;
+            consumer.Unregistered += OnConsumerUnregistered;
+            consumer.ConsumerCancelled += OnConsumerCancelled;
+
+            _channel.BasicConsume(_queueName, false, consumer);
+
+            return Task.CompletedTask;
+        }
+
+        private async Task HandleMessage(string message)
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                ILogService _logService = scope.ServiceProvider.GetRequiredService<ILogService>();
+                await _logService.Add(new LogAddViewModel { Descricao = message});
+            }
+        }
+
+        private void OnConsumerCancelled(object sender, ConsumerEventArgs e)
+        {
+        }
+
+        private void OnConsumerUnregistered(object sender, ConsumerEventArgs e)
+        {
+        }
+
+        private void OnConsumerRegistered(object sender, ConsumerEventArgs e)
+        {
+        }
+
+        private void OnConsumerShutdown(object sender, ShutdownEventArgs e)
+        {
+        }
+
+        private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e)
+        {
+        }
+
+        public override void Dispose()
+        {
+            _channel.Close();
+            _connection.Close();
+            base.Dispose();
+        }
+    }
+}

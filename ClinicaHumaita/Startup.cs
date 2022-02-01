@@ -77,13 +77,19 @@ namespace ClinicaHumaita
                 });
             });
 
+            
             //Ligação entre a internface e a classe implementadora.
-            services.AddScoped<IPersonService, PersonService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IPersonService, PersonService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IRabbitMQService, RabbitMQService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<ILogService, LogService>();
+            services.AddTransient<IRabbitMQRecieverService, RabbitMQRecieverService>();
 
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddTransient<IPersonRepository, PersonRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ILogRepository, LogRepository>();
+
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
             {
@@ -104,10 +110,11 @@ namespace ClinicaHumaita
                     };
                 });
 
+                services.AddHostedService<RabbitMQRecieverService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ClinicaContext clinicaContext)
         {
             app.UseDeveloperExceptionPage();
 
@@ -123,6 +130,9 @@ namespace ClinicaHumaita
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            clinicaContext.Database.EnsureCreated();
+            clinicaContext.Database.Migrate();
 
             app.UseEndpoints(endpoints =>
             {
