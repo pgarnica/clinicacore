@@ -17,5 +17,10 @@ namespace ClinicaHumaita.Services
         {
             _notificationService.Add(new Error(statusCode,message));
         }
+
+        protected Error GetErrors()
+        {
+           return _notificationService.getErrors();
+        }
     }
 }

@@ -16,6 +16,9 @@ using ClinicaHumaita.Business.Configuration;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Linq;
+using ClinicaHumaita.Shared.ViewModels;
+using ClinicaHumaita.Data.Models;
+using AutoMapper;
 
 namespace ClinicaHumaita
 {
@@ -90,6 +93,13 @@ namespace ClinicaHumaita
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ILogRepository, LogRepository>();
+
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<PersonAddViewModel, Person>();
+            });
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
 
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>

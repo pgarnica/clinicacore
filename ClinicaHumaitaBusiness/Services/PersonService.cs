@@ -1,4 +1,5 @@
-﻿using ClinicaHumaita.Business.Interfaces;
+﻿using AutoMapper;
+using ClinicaHumaita.Business.Interfaces;
 using ClinicaHumaita.Business.Validation;
 using ClinicaHumaita.Data.Interfaces;
 using ClinicaHumaita.Data.Models;
@@ -17,25 +18,24 @@ namespace ClinicaHumaita.Services
         private readonly IPersonRepository _personRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRabbitMQService _rabbitMQService;
+        private readonly IMapper _mapper;
 
         public PersonService(IPersonRepository personRepository,
                              IUserRepository userRepository,
+                             IMapper mapper,
                              IRabbitMQService rabbitMQService,
                              INotificationService notificationService) : base(notificationService)
         {
             _personRepository = personRepository;
             _userRepository = userRepository;
             _rabbitMQService = rabbitMQService;
+            _mapper = mapper;
         }
         public async Task<Person> Add(PersonAddViewModel personAdd)
         {
             try
             {
-                var newPerson = new Person
-                {
-                    email = personAdd.Email,
-                    name = personAdd.Name,
-                };
+                var newPerson =  _mapper.Map<Person>(personAdd);
 
                 if(!await ValidPerson(newPerson))
                 {
