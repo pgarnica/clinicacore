@@ -3,7 +3,7 @@ using ClinicaHumaita.Data.Models;
 using ClinicaHumaita.Shared.ViewModels;
 
 
-namespace ClinicaHumaita.Tests.Configuration
+namespace ClinicaHumaita.Configuration
 {
     public class AutoMapperConfiguration
     {
@@ -12,6 +12,8 @@ namespace ClinicaHumaita.Tests.Configuration
             return new AutoMapper.MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<PersonAddViewModel, Person>();
+                cfg.CreateMap<PersonUpdateViewModel, Person>();
+                cfg.CreateMap<PersonDeleteViewModel, Person>();
             });
         }
     }

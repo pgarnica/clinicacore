@@ -19,6 +19,7 @@ using System.Linq;
 using ClinicaHumaita.Shared.ViewModels;
 using ClinicaHumaita.Data.Models;
 using AutoMapper;
+using ClinicaHumaita.Configuration;
 
 namespace ClinicaHumaita
 {
@@ -34,6 +35,7 @@ namespace ClinicaHumaita
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var autoMapperConfiguration = new AutoMapperConfiguration();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddSession();
             services.AddSession(options => {
@@ -94,11 +96,8 @@ namespace ClinicaHumaita
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ILogRepository, LogRepository>();
 
-            var config = new AutoMapper.MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<PersonAddViewModel, Person>();
-            });
-            IMapper mapper = config.CreateMapper();
+            //AUTOMAPPER
+            IMapper mapper = autoMapperConfiguration.createAutoMapperConfig().CreateMapper();
             services.AddSingleton(mapper);
 
             var key = Encoding.ASCII.GetBytes(Settings.Secret);

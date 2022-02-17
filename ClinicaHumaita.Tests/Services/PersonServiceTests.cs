@@ -6,7 +6,7 @@ using ClinicaHumaita.Data.Models;
 using ClinicaHumaita.Data.Repository;
 using ClinicaHumaita.Services;
 using ClinicaHumaita.Shared.ViewModels;
-using ClinicaHumaita.Tests.Configuration;
+using ClinicaHumaita.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
