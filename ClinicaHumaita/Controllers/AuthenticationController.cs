@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace ClinicaHumaita.Controllers
 {
     [Route("api/[controller]")]
-    public class AuthenticationController : Controller
+    [ApiController]
+    public class AuthenticationController : MainController
     {
         //instancia o servico de usuario para ser utilizado pela controller e evitar acesso direto aos dados.
         private readonly IAuthenticationService _authenticationService;
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService,
+                                INotificationService notificationService) : base(notificationService)
         {
             _authenticationService = authenticationService;
         }
@@ -22,7 +24,7 @@ namespace ClinicaHumaita.Controllers
         {
             try 
             { 
-                return Ok(await _authenticationService.Authenticate(login));
+                return CustomResponse(await _authenticationService.Authenticate(login));
             }
             catch (Exception ex)
             {

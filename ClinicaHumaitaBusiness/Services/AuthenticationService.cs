@@ -8,13 +8,15 @@ using ClinicaHumaita.Data.Models;
 using ClinicaHumaita.Business.Configuration;
 using ClinicaHumaita.Shared.ViewModels;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace ClinicaHumaita.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : BaseService, IAuthenticationService
     {
         private readonly IUserService _userService;
-        public AuthenticationService(IUserService userService)
+        public AuthenticationService(IUserService userService,
+                           INotificationService notificationService) : base(notificationService)
         {
             _userService = userService;
         }
@@ -27,7 +29,8 @@ namespace ClinicaHumaita.Services
             // Verifica se o usuário existe
             if (validUser == null) 
             {
-                throw new Exception("Invalid Username or Password.");
+                ErrorNotification(HttpStatusCode.Unauthorized, "Invalid Username or Password.");
+                return null;
             }
 
             // Gera o Token

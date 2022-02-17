@@ -1,4 +1,5 @@
 ﻿using ClinicaHumaita.Business.Interfaces;
+using ClinicaHumaita.Business.Validation;
 using ClinicaHumaita.Data.Interfaces;
 using ClinicaHumaita.Data.Models;
 using ClinicaHumaita.Shared.ViewModels;
@@ -6,18 +7,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace ClinicaHumaita.Services
 {
-    public class PersonService : IPersonService
+    public class PersonService : BaseService, IPersonService
     {
         private readonly IPersonRepository _personRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRabbitMQService _rabbitMQService;
+
         public PersonService(IPersonRepository personRepository,
                              IUserRepository userRepository,
-                             IRabbitMQService rabbitMQService)
+                             IRabbitMQService rabbitMQService,
+                             INotificationService notificationService) : base(notificationService)
         {
             _personRepository = personRepository;
             _userRepository = userRepository;
@@ -32,12 +36,12 @@ namespace ClinicaHumaita.Services
                     email = personAdd.Email,
                     name = personAdd.Name,
                 };
-                var personValidation = await ValidPerson(newPerson);
-                if(!personValidation.Valid)
-                {
-                    throw new Exception(personValidation.Message);
-                }
 
+                if(!await ValidPerson(newPerson))
+                {
+                    return null;
+                }
+              
                 var person = await _personRepository.Add(newPerson);
 
                 if(person != null)
@@ -59,22 +63,21 @@ namespace ClinicaHumaita.Services
             {
                 if (!personUpdate.Id.HasValue)
                 {
-                    throw new Exception("The id field is required.");
+                    ErrorNotification(HttpStatusCode.BadRequest, "The id field is required.");
                 }
 
                 var personEdit = await _personRepository.GetById(personUpdate.Id.Value);
                 if (personEdit == null)
                 {
-                    throw new Exception("Person not found.");
+                    ErrorNotification(HttpStatusCode.NotFound, "Person not found.");
                 }
 
                 personEdit.name = personUpdate.Name;
                 personEdit.email = personUpdate.Email;
 
-                var personValidation = await ValidPerson(personEdit);
-                if (!personValidation.Valid)
+                if (!await ValidPerson(personEdit))
                 {
-                    throw new Exception(personValidation.Message);
+                    return null;
                 }
 
                 return await _personRepository.Update(personEdit);
@@ -90,18 +93,18 @@ namespace ClinicaHumaita.Services
             {
                 if (!personDelete.Id.HasValue)
                 {
-                    throw new Exception("The id field is required.");
+                    ErrorNotification(HttpStatusCode.BadRequest, "The id field is required.");
                 }
 
                 var personRemove = await _personRepository.GetById(personDelete.Id.Value);
                 if (personRemove == null)
                 {
-                    throw new Exception("Person not found.");
+                    ErrorNotification(HttpStatusCode.NotFound, "Person not found.");
                 }
 
                 if (await _userRepository.PersonIsUser(personRemove.id.Value))
                 {
-                    throw new Exception("This person has an user and can't be deleted.");
+                    ErrorNotification(HttpStatusCode.BadRequest, "This person has an user and can't be deleted.");
                 }
 
                 return await _personRepository.Delete(personRemove);
@@ -117,14 +120,16 @@ namespace ClinicaHumaita.Services
             {
                 if (!id.HasValue)
                 {
-                    throw new Exception("The id field is required.");
+                    ErrorNotification(HttpStatusCode.BadRequest, "The id field is required.");
                 }
 
                 var person = await _personRepository.GetById(id.Value);
-                if (person == null)
+
+                if(person == null)
                 {
-                    throw new Exception("Person not found.");
+                    ErrorNotification(HttpStatusCode.NotFound, "Person not found.");
                 }
+                
                 return person;
             }
             catch (Exception ex)
@@ -136,42 +141,32 @@ namespace ClinicaHumaita.Services
         {
             try
             {
-                //retorna uma lista de person que sao users
                 return await _personRepository.GetPersons();
             }
             catch
             {
-                // retorna uma exception em caso de falha
                 throw new InvalidDataException();
             }
         }
-        private async Task<ValidationViewModel> ValidPerson(Person person)
+        private async Task<bool> ValidPerson(Person person)
         {
-            var validation = new ValidationViewModel
-            {
-                Valid = true,
-                Message = String.Empty
-            };
-            
-            if (string.IsNullOrEmpty(person.name))
-            {
-                validation.Valid = false;
-                validation.Message = "Name field is required.";
-            }
+             
+            PersonValidation validation = new PersonValidation();
 
-            if (string.IsNullOrEmpty(person.email))
+            var validationResult = validation.Validate(person);
+            if (!validationResult.IsValid)
             {
-                validation.Valid = false;
-                validation.Message = "Email field is required.";
+                ErrorNotification(HttpStatusCode.BadRequest, validationResult.Errors.Select(x => x.ErrorMessage).FirstOrDefault());
+                return false;
             }
 
             if (await _personRepository.ValidateUniqueEmail(person))
             {
-                validation.Valid = false;
-                validation.Message = "There is already a person with the given email.";
+                ErrorNotification(HttpStatusCode.BadRequest, "There is already a person with the given email.");
+                return false;
             }
             
-            return validation;
+            return true;
         }
         public void Dispose()
         {

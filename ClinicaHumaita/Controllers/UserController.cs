@@ -13,11 +13,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace ClinicaHumaita.Controllers
 {
     [Route("api/[controller]")]
-    public class UserController : Controller
+    [ApiController]
+    public class UserController : MainController
     {
         //instancia o servico de usuario para ser utilizado pela controller e evitar acesso direto aos dados.
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        public UserController(IUserService userService,
+                              INotificationService notificationService) : base(notificationService)
         {
             _userService = userService;
         }
@@ -27,7 +29,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                return Ok(await _userService.Add(userAdd));
+                return CustomResponse(await _userService.Add(userAdd));
             }
             catch (Exception ex)
             {
@@ -42,7 +44,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                return Ok(await _userService.Update(userUpdate));
+                return CustomResponse(await _userService.Update(userUpdate));
             }
             catch (Exception ex)
             {
@@ -57,7 +59,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                return Ok(await _userService.Delete(user));
+                return CustomResponse(await _userService.Delete(user));
             }
             catch (Exception ex)
             {

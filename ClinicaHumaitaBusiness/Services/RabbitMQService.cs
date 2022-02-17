@@ -14,7 +14,6 @@ namespace ClinicaHumaita.Services
     public class RabbitMQService : IRabbitMQService
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogRepository _logRepository;
 
         private readonly string _hostname;
         private readonly string _password;
@@ -22,9 +21,8 @@ namespace ClinicaHumaita.Services
         private readonly string _username;
         private IConnection _connection;
 
-        public RabbitMQService(ILogRepository logRepository, IConfiguration configuration)
+        public RabbitMQService(IConfiguration configuration)
         {
-            _logRepository = logRepository;
             _configuration = configuration;
             _hostname = _configuration["RabbitMQSettings:hostName"];
             _password = _configuration["RabbitMQSettings:password"];

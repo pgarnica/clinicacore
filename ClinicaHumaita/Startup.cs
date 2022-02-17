@@ -79,16 +79,17 @@ namespace ClinicaHumaita
 
             
             //Ligação entre a internface e a classe implementadora.
-            services.AddTransient<IPersonService, PersonService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IRabbitMQService, RabbitMQService>();
-            services.AddTransient<IAuthenticationService, AuthenticationService>();
-            services.AddTransient<ILogService, LogService>();
-            services.AddTransient<IRabbitMQRecieverService, RabbitMQRecieverService>();
+            services.AddScoped<IPersonService, PersonService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRabbitMQService, RabbitMQService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<ILogService, LogService>();
+            services.AddScoped<IRabbitMQRecieverService, RabbitMQRecieverService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
-            services.AddTransient<IPersonRepository, PersonRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<ILogRepository, LogRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ILogRepository, LogRepository>();
 
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>

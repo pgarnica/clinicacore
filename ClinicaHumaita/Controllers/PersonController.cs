@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace ClinicaHumaita.Controllers
 {
     [Route("api/[controller]")]
-    public class PersonController : Controller
+    [ApiController]
+    public class PersonController : MainController
     {
         private readonly IPersonService _personService;
-        public PersonController(IPersonService personService)
+        public PersonController(IPersonService personService, 
+                                INotificationService notificationService)  : base(notificationService)
         {
             _personService = personService;
         }
@@ -22,7 +24,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                return Ok(await _personService.GetPersons());
+                return CustomResponse(await _personService.GetPersons());
             }
             catch (Exception ex)
             {
@@ -36,7 +38,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                return Ok(await _personService.Add(personAdd));
+                return CustomResponse(await _personService.Add(personAdd));
             }
             catch (Exception ex)
             {
@@ -50,7 +52,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                return Ok(await _personService.Update(personUpdate));
+                return CustomResponse(await _personService.Update(personUpdate));
             }
             catch (Exception ex)
             {
@@ -64,7 +66,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                return Ok(await _personService.Delete(personDelete));
+                return CustomResponse(await _personService.Delete(personDelete));
             }
             catch(Exception ex)
             {
@@ -79,7 +81,7 @@ namespace ClinicaHumaita.Controllers
         {
             try
             {
-                return Ok(await _personService.GetById(id));
+                return CustomResponse(await _personService.GetById(id));
             }
             catch (Exception ex)
             {

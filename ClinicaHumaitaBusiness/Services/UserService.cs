@@ -2,22 +2,21 @@
 using ClinicaHumaita.Data.Interfaces;
 using ClinicaHumaita.Data.Models;
 using ClinicaHumaita.Shared.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.IO;
-using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ClinicaHumaita.Services
 {
-    public class UserService : IUserService
+    public class UserService : BaseService, IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IPersonService _personService;
         public UserService(IUserRepository userRepository,
-                           IPersonService personService)
+                           IPersonService personService,
+                           INotificationService notificationService) : base(notificationService)
         {
             _userRepository = userRepository;
             _personService = personService;
@@ -28,7 +27,8 @@ namespace ClinicaHumaita.Services
             {
                 if (await _userRepository.CheckExistingUserName(userAdd.Username, null))
                 {
-                    throw new Exception("The given username is already in use.");
+                    ErrorNotification(HttpStatusCode.BadRequest, "The given username is already in use.");
+                    return null;
                 }
 
                 var person = await _personService.Add(new PersonAddViewModel { Name = userAdd.Name, Email = userAdd.Email });
@@ -79,12 +79,14 @@ namespace ClinicaHumaita.Services
             {
                 if (!userUpdate.Id.HasValue)
                 {
-                    throw new Exception("The id field is required.");
+                    ErrorNotification(HttpStatusCode.BadRequest, "The id field is required.");
+                    return null;
                 }
 
                 if (await _userRepository.CheckExistingUserName(userUpdate.Username, userUpdate.Id))
                 {
-                    throw new Exception("The given username is already in use.");
+                    ErrorNotification(HttpStatusCode.BadRequest, "The given username is already in use.");
+                    return null;
                 }
 
                 var user = await _userRepository.GetById(userUpdate.Id.Value);
@@ -113,13 +115,15 @@ namespace ClinicaHumaita.Services
             {
                 if (!userDelete.Id.HasValue)
                 {
-                    throw new Exception("The id field is required.");
+                    ErrorNotification(HttpStatusCode.BadRequest, "The id field is required.");
+                    return null;
                 }
 
                 var user = await _userRepository.GetById(userDelete.Id.Value);
                 if (user == null)
                 {
-                    throw new Exception("User not found.");
+                    ErrorNotification(HttpStatusCode.NotFound, "User not found.");
+                    return null;
                 }
 
                 var deletedUser = await _userRepository.Delete(new User { Id = userDelete.Id.Value });
